@@ -6,11 +6,13 @@ const (
 	sizeNil            = 1
 )
 
-func EncodeNil(b []byte, inverse bool) {
+func EncodeNil(b []byte, inverse bool) int {
+	b = b[:1]
 	b[0] = typeByteNil
 	if inverse {
 		invertArray(b)
 	}
+	return sizeNil
 }
 
 func DecodeNil(b []byte) int {

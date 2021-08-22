@@ -12,15 +12,17 @@ const (
 	sizeInt64                 = int(unsafe.Sizeof(int64(0))) + 1
 )
 
-func EncodeInt64(b []byte, v int64, inverse bool) {
-	if len(b) < sizeInt64 {
+func EncodeInt64(b []byte, v int64, inverse bool) int {
+	if cap(b) < sizeInt64 {
 		panic("slice is too small to hold an int8")
 	}
+	b = b[:sizeInt64]
 	b[0] = typeByteInt64
 	binary.BigEndian.PutUint64(b[1:], uint64(v)^(1<<63))
 	if inverse {
 		invertArray(b)
 	}
+	return sizeInt64
 }
 
 func DecodeInt64(b []byte, v reflect.Value) (int, error) {

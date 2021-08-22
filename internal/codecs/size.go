@@ -43,9 +43,9 @@ func SizeNext(b []byte) int {
 	case typeByteFloat64, typeByteFloat64Inverse:
 		return sizeFloat64
 	case typeByteString:
-		return bytes.IndexByte(b, terminatorByte)
+		return bytes.IndexByte(b, terminatorByte) + 1
 	case typeByteStringInverse:
-		return bytes.IndexByte(b, terminatorByteInverse)
+		return bytes.IndexByte(b, terminatorByteInverse) + 1
 	default:
 		panic("Unknown type")
 	}

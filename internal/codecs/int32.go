@@ -16,15 +16,17 @@ var (
 	intType = reflect.TypeOf(int(0))
 )
 
-func EncodeInt32(b []byte, v int32, inverse bool) {
-	if len(b) < sizeInt32 {
+func EncodeInt32(b []byte, v int32, inverse bool) int {
+	if cap(b) < sizeInt32 {
 		panic("slice is too small to hold an int32")
 	}
+	b = b[:sizeInt32]
 	b[0] = typeByteInt32
 	binary.BigEndian.PutUint32(b[1:], uint32(v)^(1<<31))
 	if inverse {
 		invertArray(b)
 	}
+	return sizeInt32
 }
 
 func DecodeInt32(b []byte, v reflect.Value) (int, error) {

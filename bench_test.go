@@ -5,7 +5,7 @@ import (
 	"math/rand"
 	"testing"
 
-	. "github.com/iancmcc/keypack/internal/codecs"
+	. "github.com/iancmcc/keypack"
 )
 
 var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
@@ -24,8 +24,8 @@ func BenchmarkTestInt8Encoder(b *testing.B) {
 	var i int8
 	b.StartTimer()
 	for i = 0; i < 127; i++ {
-		EncodeValue(out, i, false)
-		EncodeValue(out, i, true)
+		PackInto(out, i)
+		WithDesc(true).PackInto(out, i)
 	}
 }
 
@@ -35,8 +35,8 @@ func BenchmarkTestInt16Encoder(b *testing.B) {
 	var i int16
 	b.StartTimer()
 	for i = 0; i < 255; i++ {
-		EncodeValue(out, i, false)
-		EncodeValue(out, i, true)
+		PackInto(out, i)
+		WithDesc(true).PackInto(out, i)
 	}
 }
 
@@ -46,8 +46,8 @@ func BenchmarkTestInt32Encoder(b *testing.B) {
 	var i int32
 	b.StartTimer()
 	for i = 0; i < 1024; i++ {
-		EncodeValue(out, i, false)
-		EncodeValue(out, i, true)
+		PackInto(out, i)
+		WithDesc(true).PackInto(out, i)
 	}
 }
 
@@ -55,8 +55,8 @@ func BenchmarkTestInt64Encoder(b *testing.B) {
 	out := make([]byte, 9, 9)
 	var i int64
 	for i = 0; i < 2048; i++ {
-		EncodeValue(out, i, false)
-		EncodeValue(out, i, true)
+		PackInto(out, i)
+		WithDesc(true).PackInto(out, i)
 	}
 }
 
@@ -66,8 +66,8 @@ func BenchmarkTestFloat32Encoder(b *testing.B) {
 	var i float32
 	b.StartTimer()
 	for i = 0; i < 2048; i++ {
-		EncodeValue(out, i+0.5, false)
-		EncodeValue(out, i+0.5, true)
+		PackInto(out, i)
+		WithDesc(true).PackInto(out, i)
 	}
 }
 
@@ -77,8 +77,8 @@ func BenchmarkTestFloat64Encoder(b *testing.B) {
 	var i float64
 	b.StartTimer()
 	for i = 0; i < 2048; i++ {
-		EncodeValue(out, i+0.5, false)
-		EncodeValue(out, i+0.5, true)
+		PackInto(out, i)
+		WithDesc(true).PackInto(out, i)
 	}
 }
 
@@ -89,37 +89,26 @@ func BenchmarkTestStringEncoder(b *testing.B) {
 	var i int
 	for i = 0; i < 1022; i++ {
 		b.StartTimer()
-		EncodeValue(out, s, false)
-		EncodeValue(out, s, true)
+		PackInto(out, i)
+		WithDesc(true).PackInto(out, s)
 		b.StopTimer()
-	}
-}
-
-func BenchmarkNilEncoder(b *testing.B) {
-	b.StopTimer()
-	out := make([]byte, 1, 1)
-	var i int
-	b.StartTimer()
-	for i = 0; i < 127; i++ {
-		EncodeValue(out, nil, false)
-		EncodeValue(out, nil, true)
 	}
 }
 
 func BenchmarkInt8Decoder(b *testing.B) {
 	b.StopTimer()
 	out := make([]byte, 2, 2)
-	EncodeValue(out, int8(71), true)
+	WithDesc(true).PackInto(out, int8(71))
 	var v int8
 	b.StartTimer()
-	DecodeValue(out, &v)
+	Unpack(out, &v)
 	b.StopTimer()
 	if v != int8(71) {
 		panic("int8 bad decode")
 	}
-	EncodeValue(out, int8(69), false)
+	PackInto(out, int8(69))
 	b.StartTimer()
-	DecodeValue(out, &v)
+	Unpack(out, &v)
 	b.StopTimer()
 	if v != int8(69) {
 		panic("int8 bad decode")
@@ -129,17 +118,17 @@ func BenchmarkInt8Decoder(b *testing.B) {
 func BenchmarkInt16Decoder(b *testing.B) {
 	b.StopTimer()
 	out := make([]byte, 4, 4)
-	EncodeValue(out, int16(254), true)
+	WithDesc(true).PackInto(out, int16(254))
 	var v int16
 	b.StartTimer()
-	DecodeValue(out, &v)
+	Unpack(out, &v)
 	b.StopTimer()
 	if v != int16(254) {
 		panic("int16 bad decode")
 	}
-	EncodeValue(out, int16(269), false)
+	PackInto(out, int16(269))
 	b.StartTimer()
-	DecodeValue(out, &v)
+	Unpack(out, &v)
 	b.StopTimer()
 	if v != int16(269) {
 		panic("int16 bad decode")
@@ -149,17 +138,17 @@ func BenchmarkInt16Decoder(b *testing.B) {
 func BenchmarkInt32Decoder(b *testing.B) {
 	b.StopTimer()
 	out := make([]byte, 5, 5)
-	EncodeValue(out, int32(254), true)
+	WithDesc(true).PackInto(out, int32(254))
 	var v int32
 	b.StartTimer()
-	DecodeValue(out, &v)
+	Unpack(out, &v)
 	b.StopTimer()
 	if v != int32(254) {
 		panic("int32 bad decode")
 	}
-	EncodeValue(out, int32(269), false)
+	PackInto(out, int32(269))
 	b.StartTimer()
-	DecodeValue(out, &v)
+	Unpack(out, &v)
 	b.StopTimer()
 	if v != int32(269) {
 		panic("int32 bad decode")
@@ -169,17 +158,17 @@ func BenchmarkInt32Decoder(b *testing.B) {
 func BenchmarkInt64Decoder(b *testing.B) {
 	b.StopTimer()
 	out := make([]byte, 9, 9)
-	EncodeValue(out, int64(182832901), true)
+	WithDesc(true).PackInto(out, int64(182832901))
 	var v int64
 	b.StartTimer()
-	DecodeValue(out, &v)
+	Unpack(out, &v)
 	b.StopTimer()
 	if v != int64(182832901) {
 		panic("int64 bad decode")
 	}
-	EncodeValue(out, int64(-12398201928), false)
+	PackInto(out, int64(-12398201928))
 	b.StartTimer()
-	DecodeValue(out, &v)
+	Unpack(out, &v)
 	b.StopTimer()
 	if v != int64(-12398201928) {
 		panic("int64 bad decode")
@@ -189,17 +178,17 @@ func BenchmarkInt64Decoder(b *testing.B) {
 func BenchmarkFloat32Decoder(b *testing.B) {
 	b.StopTimer()
 	out := make([]byte, 5, 5)
-	EncodeValue(out, float32(1828.32901), true)
+	WithDesc(true).PackInto(out, float32(1828.32901))
 	var v float32
 	b.StartTimer()
-	DecodeValue(out, &v)
+	Unpack(out, &v)
 	b.StopTimer()
 	if v != float32(1828.32901) {
 		panic("float32 bad decode")
 	}
-	EncodeValue(out, float32(-1239.8201928), false)
+	PackInto(out, float32(-1239.8201928))
 	b.StartTimer()
-	DecodeValue(out, &v)
+	Unpack(out, &v)
 	b.StopTimer()
 	if v != float32(-1239.8201928) {
 		panic("float32 bad decode")
@@ -209,17 +198,17 @@ func BenchmarkFloat32Decoder(b *testing.B) {
 func BenchmarkFloat64Decoder(b *testing.B) {
 	b.StopTimer()
 	out := make([]byte, 9, 9)
-	EncodeValue(out, float64(1828.64901), true)
+	WithDesc(true).PackInto(out, float64(1828.64901))
 	var v float64
 	b.StartTimer()
-	DecodeValue(out, &v)
+	Unpack(out, &v)
 	b.StopTimer()
 	if v != float64(1828.64901) {
 		panic("float64 bad decode")
 	}
-	EncodeValue(out, float64(-1239.8201928), false)
+	PackInto(out, float64(-1239.8201928))
 	b.StartTimer()
-	DecodeValue(out, &v)
+	Unpack(out, &v)
 	b.StopTimer()
 	if v != float64(-1239.8201928) {
 		panic("float64 bad decode")
@@ -230,25 +219,19 @@ func BenchmarkStringDecoder(b *testing.B) {
 	s := "now is the time for all good men"
 	b.StopTimer()
 	out := make([]byte, 256, 256)
-	EncodeValue(out, s, true)
+	WithDesc(true).PackInto(out, s)
 	var v string
 	b.StartTimer()
-	i, _ := DecodeValue(out, &v)
+	Unpack(out, &v)
 	b.StopTimer()
 	if v != s {
 		panic(fmt.Sprintf("string bad decode: %s != %s", s, v))
 	}
-	if i != len(s)+2 {
-		panic(fmt.Sprintf("bad string length: %d != %d", i, len(s)+2))
-	}
-	EncodeValue(out, s, false)
+	PackInto(out, s)
 	b.StartTimer()
-	i, _ = DecodeValue(out, &v)
+	Unpack(out, &v)
 	b.StopTimer()
 	if v != s {
 		panic("string bad decode")
-	}
-	if i != len(s)+2 {
-		panic("bad string length")
 	}
 }
