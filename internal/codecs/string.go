@@ -1,7 +1,6 @@
-package internal
+package codecs
 
 import (
-	"bytes"
 	"reflect"
 	"strings"
 	"unsafe"
@@ -13,11 +12,6 @@ const (
 	typeByteStringInverse      = typeByteString ^ 0xff
 	terminatorByteInverse      = terminatorByte ^ 0xff
 )
-
-func stringToByte(s string) []byte {
-	sh := (*reflect.StringHeader)(unsafe.Pointer(&s))
-	return *(*[]byte)(unsafe.Pointer(sh))
-}
 
 func EncodeString(b []byte, v string, inverse bool) {
 	if len(b) < len(v)+2 {
@@ -38,16 +32,18 @@ func EncodeString(b []byte, v string, inverse bool) {
 func DecodeString(b []byte, v reflect.Value) (int, error) {
 	var (
 		encoded []byte
-		idx     int
+		idx     = SizeNext(b)
 	)
+	encoded = b[1:idx]
+
 	if b[0] == typeByteStringInverse {
-		idx = bytes.IndexByte(b, terminatorByteInverse)
-		encoded = b[1:idx]
 		invertArray(encoded)
-	} else {
-		idx = bytes.IndexByte(b, terminatorByte)
-		encoded = b[1:idx]
 	}
 	v.Elem().Set(reflect.ValueOf(string(encoded)))
 	return idx + 1, nil
+}
+
+func stringToByte(s string) []byte {
+	sh := (*reflect.StringHeader)(unsafe.Pointer(&s))
+	return *(*[]byte)(unsafe.Pointer(sh))
 }

@@ -1,4 +1,4 @@
-package internal
+package codecs
 
 const (
 	typeByteNil        = 0x05

@@ -1,12 +1,12 @@
 package keypack
 
 import (
-	"github.com/iancmcc/keypack/internal"
+	"github.com/iancmcc/keypack/internal/codecs"
 )
 
 var (
-	Encode      = internal.Encode
-	EncodeValue = internal.EncodeValue
+	Encode      = codecs.Encode
+	EncodeValue = codecs.EncodeValue
 
-	DecodeValue = internal.DecodeValue
+	DecodeValue = codecs.DecodeValue
 )

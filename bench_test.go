@@ -5,7 +5,7 @@ import (
 	"math/rand"
 	"testing"
 
-	. "github.com/iancmcc/keypack/internal"
+	. "github.com/iancmcc/keypack/internal/codecs"
 )
 
 var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
@@ -239,7 +239,7 @@ func BenchmarkStringDecoder(b *testing.B) {
 		panic(fmt.Sprintf("string bad decode: %s != %s", s, v))
 	}
 	if i != len(s)+2 {
-		panic("bad string length")
+		panic(fmt.Sprintf("bad string length: %d != %d", i, len(s)+2))
 	}
 	EncodeValue(out, s, false)
 	b.StartTimer()

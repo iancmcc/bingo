@@ -1,4 +1,4 @@
-package internal_test
+package codecs_test
 
 import (
 	"testing"

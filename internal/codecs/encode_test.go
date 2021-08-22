@@ -1,10 +1,10 @@
-package internal_test
+package codecs_test
 
 import (
 	"bytes"
 	"fmt"
 
-	. "github.com/iancmcc/keypack/internal"
+	. "github.com/iancmcc/keypack/internal/codecs"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"
@@ -42,7 +42,7 @@ var _ = Describe("Codec", func() {
 		}
 		Describe(fmt.Sprintf("for type %s", typeName), func() {
 			DescribeTable("correctly orders values which are", func(x, y interface{}) {
-				a, b := make([]byte, SizeOf(x), SizeOf(x)), make([]byte, SizeOf(y), SizeOf(y))
+				a, b := make([]byte, EncodedSize(x), EncodedSize(x)), make([]byte, EncodedSize(y), EncodedSize(y))
 				EncodeValue(a, x, false)
 				EncodeValue(b, y, false)
 				Ω(bytes.Compare(a, b)).Should(BeNumerically("==", -1))
@@ -51,47 +51,7 @@ var _ = Describe("Codec", func() {
 		})
 	}
 
-	/*
-		Describe("for type int8", func() {
-			DescribeTable("correctly orders values which are",
-				func(x int, y int) {
-					a, b := make([]byte, 2, 2), make([]byte, 2, 2)
-					EncodeInt8(a, int8(x), false)
-					EncodeInt8(b, int8(y), false)
-					Ω(bytes.Compare(a, b)).Should(BeNumerically("==", -1))
-				},
-				Entry("positive", 1, 2),
-				Entry("negative", -2, -1),
-				Entry("non-negative", 0, 1),
-				Entry("non-positive", -1, 0),
-				Entry("mixed", -1, 1),
-			)
-			DescribeTable("correctly inversely orders values which are",
-				func(x int, y int) {
-					a, b := make([]byte, 2, 2), make([]byte, 2, 2)
-					EncodeInt8(a, int8(x), true)
-					EncodeInt8(b, int8(y), true)
-					Ω(bytes.Compare(a, b)).Should(BeNumerically("==", 1))
-				},
-				Entry("positive", 1, 2),
-				Entry("negative", -2, -1),
-				Entry("non-negative", 0, 1),
-				Entry("non-positive", -1, 0),
-				Entry("mixed", -1, 1),
-			)
-		})
-	*/
 })
-
-/*
-func BenchmarkTestInt8Encoder(b *testing.B) {
-	out := make([]byte, 2, 2)
-	var i int8
-	for i = 0; i < 127; i++ {
-		EncodeInt8(out, i, false)
-	}
-}
-*/
 
 func cast(s string, v interface{}) interface{} {
 	switch s {
