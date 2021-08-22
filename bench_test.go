@@ -186,7 +186,7 @@ func BenchmarkInt64Decoder(b *testing.B) {
 	}
 }
 
-func BenchmarkFloat32(b *testing.B) {
+func BenchmarkFloat32Decoder(b *testing.B) {
 	b.StopTimer()
 	out := make([]byte, 5, 5)
 	EncodeValue(out, float32(1828.32901), true)
@@ -206,7 +206,7 @@ func BenchmarkFloat32(b *testing.B) {
 	}
 }
 
-func BenchmarkFloat64(b *testing.B) {
+func BenchmarkFloat64Decoder(b *testing.B) {
 	b.StopTimer()
 	out := make([]byte, 9, 9)
 	EncodeValue(out, float64(1828.64901), true)
@@ -226,7 +226,7 @@ func BenchmarkFloat64(b *testing.B) {
 	}
 }
 
-func BenchmarkString(b *testing.B) {
+func BenchmarkStringDecoder(b *testing.B) {
 	s := "now is the time for all good men"
 	b.StopTimer()
 	out := make([]byte, 256, 256)
