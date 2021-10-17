@@ -2,18 +2,15 @@ package codecs
 
 import (
 	"encoding/binary"
-	"reflect"
 	"unsafe"
+
+	"github.com/goccy/go-reflect"
 )
 
 const (
 	typeByteInt32        byte = 0x2b
 	typeByteInt32Inverse      = typeByteInt32 ^ 0xff
 	sizeInt32                 = int(unsafe.Sizeof(int32(0))) + 1
-)
-
-var (
-	intType = reflect.TypeOf(int(0))
 )
 
 func EncodeInt32(b []byte, v int32, inverse bool) int {
@@ -40,11 +37,11 @@ func DecodeInt32(b []byte, v reflect.Value) (int, error) {
 	for i := 1; i < 4; i++ {
 		val = (val << 8) + int32(encoded[i]&0xff)
 	}
-	e := v.Elem()
-	if e.Type() == intType {
-		e.Set(reflect.ValueOf(int(val)))
+	typ, ptr := reflect.TypeAndPtrOf(v)
+	if typ.Kind() == reflect.Int {
+		**(**int)(unsafe.Pointer(&ptr)) = *(*int)(unsafe.Pointer(&val))
 	} else {
-		e.Set(reflect.ValueOf(val))
+		**(**int32)(unsafe.Pointer(&ptr)) = *(*int32)(unsafe.Pointer(&val))
 	}
 	return sizeInt32, nil
 }

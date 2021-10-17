@@ -3,8 +3,9 @@ package codecs
 import (
 	"encoding/binary"
 	"math"
-	"reflect"
 	"unsafe"
+
+	"github.com/goccy/go-reflect"
 )
 
 const (
@@ -38,6 +39,7 @@ func DecodeFloat32(b []byte, v reflect.Value) (int, error) {
 	val := int32(binary.BigEndian.Uint32(encoded))
 	val ^= (^val >> 31) | (-1 << 31)
 	fv := math.Float32frombits(uint32(val))
-	v.Elem().Set(reflect.ValueOf(fv))
+	ptr := v.Pointer()
+	**(**float32)(unsafe.Pointer(&ptr)) = *(*float32)(unsafe.Pointer(&fv))
 	return sizeFloat32, nil
 }

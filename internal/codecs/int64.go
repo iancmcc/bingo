@@ -2,8 +2,9 @@ package codecs
 
 import (
 	"encoding/binary"
-	"reflect"
 	"unsafe"
+
+	"github.com/goccy/go-reflect"
 )
 
 const (
@@ -36,6 +37,7 @@ func DecodeInt64(b []byte, v reflect.Value) (int, error) {
 	for i := 1; i < 8; i++ {
 		val = (val << 8) + int64(encoded[i]&0xff)
 	}
-	v.Elem().Set(reflect.ValueOf(val))
+	ptr := v.Pointer()
+	**(**int64)(unsafe.Pointer(&ptr)) = *(*int64)(unsafe.Pointer(&val))
 	return sizeInt64, nil
 }

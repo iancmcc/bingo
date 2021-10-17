@@ -1,9 +1,10 @@
 package codecs
 
 import (
-	"reflect"
 	"strings"
 	"unsafe"
+
+	"github.com/goccy/go-reflect"
 )
 
 const (
@@ -22,9 +23,10 @@ func EncodeString(b []byte, v string, inverse bool) int {
 	if strings.IndexByte(v, terminatorByte) > -1 {
 		panic("can't encode a string that contains a null byte")
 	}
+
 	b = b[:size]
 	b[0] = typeByteString
-	copy(b[1:len(v)+1], stringToByte(v))
+	copy(b[1:len(v)+1], v)
 	b[len(v)+1] = terminatorByte
 	if inverse {
 		invertArray(b)
@@ -37,16 +39,14 @@ func DecodeString(b []byte, v reflect.Value) (int, error) {
 		encoded []byte
 		idx     = SizeNext(b)
 	)
-	encoded = b[1:idx]
+	encoded = b[1 : idx-1]
 
 	if b[0] == typeByteStringInverse {
 		invertArray(encoded)
 	}
-	v.Elem().Set(reflect.ValueOf(string(encoded)))
-	return idx + 1, nil
-}
 
-func stringToByte(s string) []byte {
-	sh := (*reflect.StringHeader)(unsafe.Pointer(&s))
-	return *(*[]byte)(unsafe.Pointer(sh))
+	ptr := v.Pointer()
+	**(**string)(unsafe.Pointer(&ptr)) = *(*string)(unsafe.Pointer(&encoded))
+
+	return idx, nil
 }

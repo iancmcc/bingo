@@ -1,8 +1,9 @@
 package codecs
 
 import (
-	"reflect"
 	"unsafe"
+
+	"github.com/goccy/go-reflect"
 )
 
 const (
@@ -30,6 +31,6 @@ func DecodeInt8(b []byte, v reflect.Value) (int, error) {
 		encoded = invert(encoded)
 	}
 	val := int8((encoded ^ 0x80) & 0xff)
-	v.Elem().Set(reflect.ValueOf(val))
+	v.Elem().Set(reflect.ValueNoEscapeOf(val))
 	return sizeInt8, nil
 }

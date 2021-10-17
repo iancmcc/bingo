@@ -1,6 +1,10 @@
 package codecs
 
-import "bytes"
+import (
+	"bytes"
+	"fmt"
+	"time"
+)
 
 func EncodedSize(v interface{}) int {
 	if v == nil {
@@ -19,6 +23,8 @@ func EncodedSize(v interface{}) int {
 		return sizeFloat32
 	case float64:
 		return sizeFloat64
+	case time.Time:
+		return sizeTime
 	case string:
 		return len(t) + 2
 	default:
@@ -42,11 +48,13 @@ func SizeNext(b []byte) int {
 		return sizeFloat32
 	case typeByteFloat64, typeByteFloat64Inverse:
 		return sizeFloat64
+	case typeByteTime, typeByteTimeInverse:
+		return sizeTime
 	case typeByteString:
 		return bytes.IndexByte(b, terminatorByte) + 1
 	case typeByteStringInverse:
 		return bytes.IndexByte(b, terminatorByteInverse) + 1
 	default:
-		panic("Unknown type")
+		panic(fmt.Sprintf("Unknown type: %x", b[0]))
 	}
 }

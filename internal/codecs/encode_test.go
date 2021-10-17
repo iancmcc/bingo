@@ -3,6 +3,7 @@ package codecs_test
 import (
 	"bytes"
 	"fmt"
+	"time"
 
 	. "github.com/iancmcc/keypack/internal/codecs"
 	. "github.com/onsi/ginkgo"
@@ -24,8 +25,12 @@ var (
 			{"different lengths", "aaa", "abcde"},
 			{"empty", "", "a"},
 		},
+		"time": {
+			{"the same time zone", time.Now().Add(-time.Hour), time.Now()},
+			{"different time zones", time.Now().Add(-time.Hour).UTC(), time.Now()},
+		},
 	}
-	alltypes = []string{"int8", "int16", "int", "int32", "int64", "float32", "float64", "string"}
+	alltypes = []string{"int8", "int16", "int", "int32", "int64", "float32", "float64", "string", "time"}
 )
 
 var _ = Describe("Codec", func() {
@@ -33,6 +38,8 @@ var _ = Describe("Codec", func() {
 		var v [][]interface{}
 		if typeName == "string" {
 			v = testVals["string"]
+		} else if typeName == "time" {
+			v = testVals["time"]
 		} else {
 			v = testVals["numeric"]
 		}
@@ -71,6 +78,8 @@ func cast(s string, v interface{}) interface{} {
 		return float64(v.(int))
 	case "string":
 		return v.(string)
+	case "time":
+		return v.(time.Time)
 	default:
 		panic("Unsupported type")
 	}
