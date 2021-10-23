@@ -1,4 +1,4 @@
-module github.com/iancmcc/keypack
+module github.com/iancmcc/bingo
 
 go 1.17
 

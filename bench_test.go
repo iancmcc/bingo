@@ -1,11 +1,11 @@
-package keypack_test
+package bingo_test
 
 import (
 	"math/rand"
 	"testing"
 	"time"
 
-	. "github.com/iancmcc/keypack"
+	. "github.com/iancmcc/bingo"
 )
 
 var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")

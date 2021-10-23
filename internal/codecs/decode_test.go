@@ -1,7 +1,7 @@
 package codecs_test
 
 import (
-	. "github.com/iancmcc/keypack/internal/codecs"
+	. "github.com/iancmcc/bingo/internal/codecs"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )

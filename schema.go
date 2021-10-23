@@ -1,7 +1,7 @@
-package keypack
+package bingo
 
 import (
-	"github.com/iancmcc/keypack/internal/codecs"
+	"github.com/iancmcc/bingo/internal/codecs"
 )
 
 type Schema uint64

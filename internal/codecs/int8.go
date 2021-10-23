@@ -31,6 +31,7 @@ func DecodeInt8(b []byte, v reflect.Value) (int, error) {
 		encoded = invert(encoded)
 	}
 	val := int8((encoded ^ 0x80) & 0xff)
-	v.Elem().Set(reflect.ValueNoEscapeOf(val))
+	ptr := v.Pointer()
+	**(**int8)(unsafe.Pointer(&ptr)) = *(*int8)(unsafe.Pointer(&val))
 	return sizeInt8, nil
 }

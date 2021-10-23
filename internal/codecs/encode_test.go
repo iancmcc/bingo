@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	. "github.com/iancmcc/keypack/internal/codecs"
+	. "github.com/iancmcc/bingo/internal/codecs"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"

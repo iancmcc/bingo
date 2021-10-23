@@ -1,10 +1,10 @@
-package keypack_test
+package bingo_test
 
 import (
 	"bytes"
 	"testing"
 
-	. "github.com/iancmcc/keypack"
+	. "github.com/iancmcc/bingo_test"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -55,7 +55,7 @@ var _ = Describe("Packing", func() {
 	})
 })
 
-func TestKeypack(t *testing.T) {
+func TestBingo(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Keypack Suite")
+	RunSpecs(t, "Bingo Suite")
 }

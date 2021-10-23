@@ -1,5 +1,5 @@
 /*
-Package keypack packs values into composite keys, using a byte encoding that
+Package bingo packs values into composite keys, using a byte encoding that
 preserves the sort order of the original values.
 
 Many of the encoding formats are the same as those used in HBase's OrderedBytes
@@ -8,4 +8,4 @@ Orderly.
 
 Coming soon: This package includes codecs for time.Time, bool, and unsigned integers.
 */
-package keypack
+package bingo
