@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	. "github.com/iancmcc/bingo_test"
+	. "github.com/iancmcc/bingo"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
