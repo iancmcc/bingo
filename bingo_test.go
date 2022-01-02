@@ -10,11 +10,13 @@ import (
 )
 
 var _ = Describe("Packing", func() {
+
 	It("should pack values while preserving order", func() {
 		a := Pack(1, "hi", int64(67))
 		b := Pack(1, "hi 1", int64(67))
 		Ω(bytes.Compare(a, b)).Should(Equal(-1))
 	})
+
 	It("should pack values into a given array while preserving order", func() {
 		buf := make([]byte, 32)
 		bufd := make([]byte, 32)
@@ -22,6 +24,7 @@ var _ = Describe("Packing", func() {
 		PackInto(bufd, 1, "hi 1", int64(67))
 		Ω(bytes.Compare(buf, bufd)).Should(Equal(-1))
 	})
+
 	It("should pack values with a packer while preserving order", func() {
 		buf := make([]byte, 32)
 		bufd := make([]byte, 32)
@@ -29,11 +32,21 @@ var _ = Describe("Packing", func() {
 		Packer(bufd).Pack(1).Pack("hi 1").Pack(int64(67)).Done()
 		Ω(bytes.Compare(buf, bufd)).Should(Equal(-1))
 	})
+
 	It("should pack mixed-order values while preserving order", func() {
 		s := WithDesc(false, true, false)
 		a := s.Pack(1, "hi", int64(67))
 		b := s.Pack(1, "hi 1", int64(67))
 		Ω(bytes.Compare(a, b)).Should(Equal(1))
+	})
+
+	It("should pack mixed-order values into a given byte array while preserving order", func() {
+		buf := make([]byte, 32)
+		bufd := make([]byte, 32)
+		s := WithDesc(false, true, false)
+		s.PackInto(buf, 1, "hi", int64(67))
+		s.PackInto(bufd, 1, "hi 1", int64(67))
+		Ω(bytes.Compare(buf, bufd)).Should(Equal(1))
 	})
 })
 var _ = Describe("Unpacking", func() {

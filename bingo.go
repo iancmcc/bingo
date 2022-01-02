@@ -16,7 +16,7 @@ func Pack(vals ...interface{}) []byte {
 
 // PackInto packs vals into b.
 func PackInto(b []byte, vals ...interface{}) (n int) {
-	return defaultSchema.packSlice(b, vals)
+	return defaultSchema.PackSlice(b, vals)
 }
 
 func Packer(b []byte) schemaPacker {
@@ -52,16 +52,4 @@ func UnpackIndex(b []byte, idx int, dest interface{}) error {
 		n += codecs.SizeNext(b[n:])
 	}
 	return Unpack(b[n:], dest)
-}
-
-// WithDesc returns a Schema that will produce packed keys with the indicated
-// values encoded to sort in descending order.
-func WithDesc(cols ...bool) Schema {
-	var s Schema
-	for i, t := range cols {
-		if t {
-			s |= (1 << i)
-		}
-	}
-	return s
 }

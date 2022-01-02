@@ -10,6 +10,18 @@ type schemaPacker struct {
 	i int
 }
 
+// WithDesc returns a Schema that will produce packed keys with the indicated
+// values encoded to sort in descending order.
+func WithDesc(cols ...bool) Schema {
+	var s Schema
+	for i, t := range cols {
+		if t {
+			s |= (1 << i)
+		}
+	}
+	return s
+}
+
 func (s Schema) Pack(vals ...interface{}) []byte {
 	var size int
 	for _, v := range vals {
