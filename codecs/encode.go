@@ -1,4 +1,4 @@
-package bingo
+package codecs
 
 import (
 	"fmt"

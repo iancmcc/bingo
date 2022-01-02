@@ -1,4 +1,4 @@
-package bingo_test
+package bytes_test
 
 import (
 	"bytes"
@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"testing"
 
-	. "github.com/iancmcc/bingo"
+	. "github.com/iancmcc/bingo/bytes"
 )
 
 type inverter func([]byte)

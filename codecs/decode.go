@@ -1,6 +1,10 @@
-package bingo
+package codecs
 
-import "github.com/goccy/go-reflect"
+import (
+	"errors"
+
+	"github.com/goccy/go-reflect"
+)
 
 // Decodes a value from b into the pointer v. Returns the number of bytes
 // consumed
@@ -30,6 +34,6 @@ func DecodeValue(b []byte, v interface{}) (int, error) {
 	case typeByteString, typeByteStringInverse:
 		return DecodeString(b, rv)
 	default:
-		panic("Unknown type")
+		return 0, errors.New("Unknown type")
 	}
 }

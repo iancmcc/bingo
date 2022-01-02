@@ -1,4 +1,4 @@
-package bingo
+package codecs
 
 import (
 	"encoding/binary"
@@ -6,6 +6,7 @@ import (
 	"unsafe"
 
 	"github.com/goccy/go-reflect"
+	"github.com/iancmcc/bingo/bytes"
 )
 
 const (
@@ -24,7 +25,7 @@ func EncodeFloat64(b []byte, v float64, inverse bool) int {
 	b[0] = typeByteFloat64
 	binary.BigEndian.PutUint64(b[1:], uint64(int64Val))
 	if inverse {
-		InvertArraySmall(b)
+		bytes.InvertArraySmall(b)
 	}
 	return sizeFloat64
 }
@@ -34,7 +35,7 @@ func DecodeFloat64(b []byte, v reflect.Value) (int, error) {
 	if b[0] == typeByteFloat64Inverse {
 		encoded = make([]byte, 8)
 		copy(encoded, b[1:9])
-		InvertArraySmall(encoded)
+		bytes.InvertArraySmall(encoded)
 	}
 	val := int64(binary.BigEndian.Uint64(encoded))
 	val ^= (^val >> 63) | (-1 << 63)

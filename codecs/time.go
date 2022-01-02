@@ -1,4 +1,4 @@
-package bingo
+package codecs
 
 import (
 	"errors"
@@ -6,6 +6,7 @@ import (
 	"unsafe"
 
 	"github.com/goccy/go-reflect"
+	"github.com/iancmcc/bingo/bytes"
 )
 
 const (
@@ -24,7 +25,7 @@ func EncodeTime(b []byte, v time.Time, inverse bool) int {
 		panic(err)
 	}
 	if inverse {
-		InvertArraySmall(b)
+		bytes.InvertArraySmall(b)
 	}
 	return sizeFloat64
 }
@@ -34,7 +35,7 @@ func DecodeTime(b []byte, v reflect.Value) (int, error) {
 	if b[0] == typeByteTimeInverse {
 		encoded = make([]byte, 15)
 		copy(encoded, b[1:16])
-		InvertArraySmall(encoded)
+		bytes.InvertArraySmall(encoded)
 	}
 	var t time.Time
 	err := t.UnmarshalBinary(encoded)

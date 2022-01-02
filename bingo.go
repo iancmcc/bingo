@@ -1,5 +1,12 @@
 package bingo
 
+import (
+	"errors"
+	"fmt"
+
+	"github.com/iancmcc/bingo/codecs"
+)
+
 const defaultSchema Schema = 0
 
 // Pack returns a byte slice containing the key composed of the values provided.
@@ -24,9 +31,9 @@ func Unpack(b []byte, dests ...interface{}) error {
 		)
 		if dest == nil {
 			// Skip this one
-			n = SizeNext(b)
+			n = codecs.SizeNext(b)
 		} else {
-			n, err = DecodeValue(b, dest)
+			n, err = codecs.DecodeValue(b, dest)
 			if err != nil {
 				return err
 			}
@@ -39,7 +46,10 @@ func Unpack(b []byte, dests ...interface{}) error {
 func UnpackIndex(b []byte, idx int, dest interface{}) error {
 	var n int
 	for i := 0; i < idx; i++ {
-		n += SizeNext(b[n:])
+		if n >= len(b) {
+			return errors.New(fmt.Sprintf("No data at index %d", idx))
+		}
+		n += codecs.SizeNext(b[n:])
 	}
 	return Unpack(b[n:], dest)
 }

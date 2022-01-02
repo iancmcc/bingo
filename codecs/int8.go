@@ -1,9 +1,10 @@
-package bingo
+package codecs
 
 import (
 	"unsafe"
 
 	"github.com/goccy/go-reflect"
+	"github.com/iancmcc/bingo/bytes"
 )
 
 const (
@@ -20,7 +21,7 @@ func EncodeInt8(b []byte, v int8, inverse bool) int {
 	b[0] = typeByteInt8
 	b[1] = byte(uint8(v) ^ 1<<7)
 	if inverse {
-		InvertArraySmall(b)
+		bytes.InvertArraySmall(b)
 	}
 	return sizeInt8
 }
@@ -28,7 +29,7 @@ func EncodeInt8(b []byte, v int8, inverse bool) int {
 func DecodeInt8(b []byte, v reflect.Value) (int, error) {
 	encoded := b[1]
 	if b[0] == typeByteInt8Inverse {
-		encoded = InvertByte(encoded)
+		encoded = bytes.InvertByte(encoded)
 	}
 	val := int8((encoded ^ 0x80) & 0xff)
 	ptr := v.Pointer()

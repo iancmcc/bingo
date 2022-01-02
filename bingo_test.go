@@ -15,12 +15,28 @@ var _ = Describe("Packing", func() {
 		b := Pack(1, "hi 1", int64(67))
 		Ω(bytes.Compare(a, b)).Should(Equal(-1))
 	})
+	It("should pack values into a given array while preserving order", func() {
+		buf := make([]byte, 32)
+		bufd := make([]byte, 32)
+		PackInto(buf, 1, "hi", int64(67))
+		PackInto(bufd, 1, "hi 1", int64(67))
+		Ω(bytes.Compare(buf, bufd)).Should(Equal(-1))
+	})
+	It("should pack values with a packer while preserving order", func() {
+		buf := make([]byte, 32)
+		bufd := make([]byte, 32)
+		Packer(buf).Pack(1).Pack("hi").Pack(int64(67)).Done()
+		Packer(bufd).Pack(1).Pack("hi 1").Pack(int64(67)).Done()
+		Ω(bytes.Compare(buf, bufd)).Should(Equal(-1))
+	})
 	It("should pack mixed-order values while preserving order", func() {
 		s := WithDesc(false, true, false)
 		a := s.Pack(1, "hi", int64(67))
 		b := s.Pack(1, "hi 1", int64(67))
 		Ω(bytes.Compare(a, b)).Should(Equal(1))
 	})
+})
+var _ = Describe("Unpacking", func() {
 
 	It("should unpack values", func() {
 		a := "this is a test"
@@ -52,6 +68,40 @@ var _ = Describe("Packing", func() {
 		Unpack(packed, &adest, nil, &cdest)
 		Ω(a).Should(Equal(adest))
 		Ω(c).Should(Equal(cdest))
+	})
+
+	It("should unpack a value at a specific index", func() {
+		a := "this is a test"
+		b := int8(69)
+		c := float32(1.61803398875)
+		packed := Pack(a, b, c)
+
+		var (
+			adest string
+			cdest float32
+		)
+
+		UnpackIndex(packed, 2, &cdest)
+		Ω(c).Should(Equal(cdest))
+
+		UnpackIndex(packed, 0, &adest)
+		Ω(a).Should(Equal(adest))
+	})
+
+	It("should error when a nonexistent index is requested", func() {
+		a := "this is a test"
+		b := int8(69)
+		c := float32(1.61803398875)
+		packed := Pack(a, b, c)
+
+		var cdest float32
+		Ω(UnpackIndex(packed, 7, &cdest)).Should(HaveOccurred())
+	})
+
+	It("should error when unpacking a random string", func() {
+		b := []byte("abcde")
+		var adest string
+		Ω(Unpack(b, &adest)).Should(HaveOccurred())
 	})
 })
 

@@ -1,10 +1,11 @@
-package bingo
+package codecs
 
 import (
 	"strings"
 	"unsafe"
 
 	"github.com/goccy/go-reflect"
+	"github.com/iancmcc/bingo/bytes"
 )
 
 const (
@@ -29,7 +30,7 @@ func EncodeString(b []byte, v string, inverse bool) int {
 	copy(b[1:len(v)+1], v)
 	b[len(v)+1] = terminatorByte
 	if inverse {
-		InvertArray(b)
+		bytes.InvertArray(b)
 	}
 	return size
 }
@@ -42,7 +43,7 @@ func DecodeString(b []byte, v reflect.Value) (int, error) {
 	encoded = b[1 : idx-1]
 
 	if b[0] == typeByteStringInverse {
-		InvertArray(encoded)
+		bytes.InvertArray(encoded)
 	}
 
 	ptr := v.Pointer()

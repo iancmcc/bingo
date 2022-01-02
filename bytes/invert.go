@@ -1,4 +1,4 @@
-package bingo
+package bytes
 
 import (
 	_ "crypto/cipher"

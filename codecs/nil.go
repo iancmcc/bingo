@@ -1,4 +1,6 @@
-package bingo
+package codecs
+
+import "github.com/iancmcc/bingo/bytes"
 
 const (
 	typeByteNil        = 0x05
@@ -10,7 +12,7 @@ func EncodeNil(b []byte, inverse bool) int {
 	b = b[:1]
 	b[0] = typeByteNil
 	if inverse {
-		InvertArraySmall(b)
+		bytes.InvertArraySmall(b)
 	}
 	return sizeNil
 }
