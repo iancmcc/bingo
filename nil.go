@@ -1,4 +1,4 @@
-package codecs
+package bingo
 
 const (
 	typeByteNil        = 0x05
@@ -10,7 +10,7 @@ func EncodeNil(b []byte, inverse bool) int {
 	b = b[:1]
 	b[0] = typeByteNil
 	if inverse {
-		invertArray(b)
+		InvertArraySmall(b)
 	}
 	return sizeNil
 }

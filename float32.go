@@ -1,4 +1,4 @@
-package codecs
+package bingo
 
 import (
 	"encoding/binary"
@@ -24,7 +24,7 @@ func EncodeFloat32(b []byte, v float32, inverse bool) int {
 	int32Val ^= (int32Val >> 31) | (-1 << 31)
 	binary.BigEndian.PutUint32(b[1:], uint32(int32Val))
 	if inverse {
-		invertArray(b)
+		InvertArraySmall(b)
 	}
 	return sizeFloat32
 }
@@ -34,7 +34,7 @@ func DecodeFloat32(b []byte, v reflect.Value) (int, error) {
 	if b[0] == typeByteFloat32Inverse {
 		encoded = make([]byte, 4)
 		copy(encoded, b[1:5])
-		invertArray(encoded)
+		InvertArraySmall(encoded)
 	}
 	val := int32(binary.BigEndian.Uint32(encoded))
 	val ^= (^val >> 31) | (-1 << 31)

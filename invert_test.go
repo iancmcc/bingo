@@ -1,10 +1,12 @@
-package bytes
+package bingo_test
 
 import (
 	"bytes"
-	"crypto/rand"
+	"math/rand"
 	"strconv"
 	"testing"
+
+	. "github.com/iancmcc/bingo"
 )
 
 type inverter func([]byte)
@@ -19,6 +21,14 @@ func testInverter(name string, f inverter, t *testing.T) {
 	f(a)
 	if !bytes.Equal(a, b) {
 		t.Fatalf("%s failed to invert properly", name)
+	}
+}
+
+func TestInvertByte(t *testing.T) {
+	a := rand.Intn(256)
+	b := InvertByte(byte(a))
+	if b^0xff != byte(a) {
+		t.Fatalf("InvertByte failed to invert properly")
 	}
 }
 

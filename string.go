@@ -1,4 +1,4 @@
-package codecs
+package bingo
 
 import (
 	"strings"
@@ -29,7 +29,7 @@ func EncodeString(b []byte, v string, inverse bool) int {
 	copy(b[1:len(v)+1], v)
 	b[len(v)+1] = terminatorByte
 	if inverse {
-		invertArray(b)
+		InvertArray(b)
 	}
 	return size
 }
@@ -42,7 +42,7 @@ func DecodeString(b []byte, v reflect.Value) (int, error) {
 	encoded = b[1 : idx-1]
 
 	if b[0] == typeByteStringInverse {
-		invertArray(encoded)
+		InvertArray(encoded)
 	}
 
 	ptr := v.Pointer()

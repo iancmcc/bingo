@@ -1,7 +1,7 @@
-package codecs_test
+package bingo_test
 
 import (
-	. "github.com/iancmcc/bingo/internal/codecs"
+	. "github.com/iancmcc/bingo"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )

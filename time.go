@@ -1,4 +1,4 @@
-package codecs
+package bingo
 
 import (
 	"errors"
@@ -24,7 +24,7 @@ func EncodeTime(b []byte, v time.Time, inverse bool) int {
 		panic(err)
 	}
 	if inverse {
-		invertArray(b)
+		InvertArraySmall(b)
 	}
 	return sizeFloat64
 }
@@ -34,7 +34,7 @@ func DecodeTime(b []byte, v reflect.Value) (int, error) {
 	if b[0] == typeByteTimeInverse {
 		encoded = make([]byte, 15)
 		copy(encoded, b[1:16])
-		invertArray(encoded)
+		InvertArraySmall(encoded)
 	}
 	var t time.Time
 	err := t.UnmarshalBinary(encoded)

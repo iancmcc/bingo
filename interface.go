@@ -1,4 +1,4 @@
-package codecs
+package bingo
 
 type (
 	Decoder func([]byte, uintptr) (int, error)

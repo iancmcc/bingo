@@ -1,4 +1,4 @@
-package codecs
+package bingo
 
 import (
 	"unsafe"
@@ -20,7 +20,7 @@ func EncodeInt8(b []byte, v int8, inverse bool) int {
 	b[0] = typeByteInt8
 	b[1] = byte(uint8(v) ^ 1<<7)
 	if inverse {
-		invertArray(b)
+		InvertArraySmall(b)
 	}
 	return sizeInt8
 }
@@ -28,7 +28,7 @@ func EncodeInt8(b []byte, v int8, inverse bool) int {
 func DecodeInt8(b []byte, v reflect.Value) (int, error) {
 	encoded := b[1]
 	if b[0] == typeByteInt8Inverse {
-		encoded = invert(encoded)
+		encoded = InvertByte(encoded)
 	}
 	val := int8((encoded ^ 0x80) & 0xff)
 	ptr := v.Pointer()

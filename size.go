@@ -1,4 +1,4 @@
-package codecs
+package bingo
 
 import (
 	"bytes"

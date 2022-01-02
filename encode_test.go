@@ -1,11 +1,11 @@
-package codecs_test
+package bingo_test
 
 import (
 	"bytes"
 	"fmt"
 	"time"
 
-	. "github.com/iancmcc/bingo/internal/codecs"
+	. "github.com/iancmcc/bingo"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"
