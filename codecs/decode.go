@@ -1,17 +1,17 @@
 package codecs
 
 import (
-	"errors"
-
 	"github.com/goccy/go-reflect"
 )
 
-// Decodes a value from b into the pointer v. Returns the number of bytes
-// consumed
+var ()
+
+// DecodeValue decodes the first value in b into the location defined by pointer
+// v.
 func DecodeValue(b []byte, v interface{}) (int, error) {
 	rv := reflect.ValueNoEscapeOf(v)
 	if rv.Kind() != reflect.Ptr || rv.IsNil() {
-		panic("Yo I need a pointer")
+		return 0, ErrNotAPointer
 	}
 	switch b[0] {
 	case typeByteNil, typeByteNilInverse:
@@ -34,6 +34,6 @@ func DecodeValue(b []byte, v interface{}) (int, error) {
 	case typeByteString, typeByteStringInverse:
 		return DecodeString(b, rv)
 	default:
-		return 0, errors.New("Unknown type")
+		return 0, ErrUnknownType
 	}
 }

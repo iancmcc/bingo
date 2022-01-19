@@ -43,7 +43,8 @@ func (s Schema) PackSlice(b []byte, vals []interface{}) (n int) {
 func (s Schema) packSlice(b []byte, vals []interface{}) (n int) {
 	for i, v := range vals {
 		desc := s&(1<<i) > 0
-		n += codecs.EncodeValue(b[n:], v, desc)
+		m, _ := codecs.EncodeValue(b[n:], v, desc)
+		n += m
 	}
 	return
 }
@@ -54,7 +55,7 @@ func (s Schema) Packer(b []byte) schemaPacker {
 
 func (s schemaPacker) Pack(v interface{}) schemaPacker {
 	desc := s.s&(1<<s.i) > 0
-	n := codecs.EncodeValue(s.b, v, desc)
+	n, _ := codecs.EncodeValue(s.b, v, desc)
 	s.b = s.b[n:]
 	s.i += 1
 	return s

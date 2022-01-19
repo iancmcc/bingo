@@ -13,9 +13,9 @@ const (
 	sizeInt8                 = int(unsafe.Sizeof(int8(0))) + 1
 )
 
-func EncodeInt8(b []byte, v int8, inverse bool) int {
+func EncodeInt8(b []byte, v int8, inverse bool) (int, error) {
 	if cap(b) < sizeInt8 {
-		panic("slice is too small to hold an int8")
+		return 0, ErrByteArraySize
 	}
 	b = b[:sizeInt8]
 	b[0] = typeByteInt8
@@ -23,7 +23,7 @@ func EncodeInt8(b []byte, v int8, inverse bool) int {
 	if inverse {
 		bytes.InvertArraySmall(b)
 	}
-	return sizeInt8
+	return sizeInt8, nil
 }
 
 func DecodeInt8(b []byte, v reflect.Value) (int, error) {
