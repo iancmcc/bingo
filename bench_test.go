@@ -242,7 +242,7 @@ func BenchmarkPack(b *testing.B) {
 		e time.Time
 	)
 	for i := 0; i < b.N; i++ {
-		v := Pack(1, int64(4), "this is a string", time.Now())
+		v, _ := Pack(1, int64(4), "this is a string", time.Now())
 		Unpack(v, &a, &c, &d, &e)
 	}
 

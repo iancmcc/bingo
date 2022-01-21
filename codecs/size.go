@@ -2,59 +2,58 @@ package codecs
 
 import (
 	"bytes"
-	"fmt"
 	"time"
 )
 
-func EncodedSize(v interface{}) int {
+func EncodedSize(v interface{}) (int, error) {
 	if v == nil {
-		return 1
+		return 1, nil
 	}
 	switch t := v.(type) {
 	case int8:
-		return sizeInt8
+		return sizeInt8, nil
 	case int16:
-		return sizeInt16
+		return sizeInt16, nil
 	case int, int32:
-		return sizeInt32
+		return sizeInt32, nil
 	case int64:
-		return sizeInt64
+		return sizeInt64, nil
 	case float32:
-		return sizeFloat32
+		return sizeFloat32, nil
 	case float64:
-		return sizeFloat64
+		return sizeFloat64, nil
 	case time.Time:
-		return sizeTime
+		return sizeTime, nil
 	case string:
-		return len(t) + 2
+		return len(t) + 2, nil
 	default:
-		panic("unknown type")
+		return 0, ErrUnknownType
 	}
 }
 
-func SizeNext(b []byte) int {
+func SizeNext(b []byte) (int, error) {
 	switch b[0] {
 	case typeByteNil, typeByteNilInverse:
-		return sizeNil
+		return sizeNil, nil
 	case typeByteInt8, typeByteInt8Inverse:
-		return sizeInt8
+		return sizeInt8, nil
 	case typeByteInt16, typeByteInt16Inverse:
-		return sizeInt16
+		return sizeInt16, nil
 	case typeByteInt32, typeByteInt32Inverse:
-		return sizeInt32
+		return sizeInt32, nil
 	case typeByteInt64, typeByteInt64Inverse:
-		return sizeInt64
+		return sizeInt64, nil
 	case typeByteFloat32, typeByteFloat32Inverse:
-		return sizeFloat32
+		return sizeFloat32, nil
 	case typeByteFloat64, typeByteFloat64Inverse:
-		return sizeFloat64
+		return sizeFloat64, nil
 	case typeByteTime, typeByteTimeInverse:
-		return sizeTime
+		return sizeTime, nil
 	case typeByteString:
-		return bytes.IndexByte(b, terminatorByte) + 1
+		return bytes.IndexByte(b, terminatorByte) + 1, nil
 	case typeByteStringInverse:
-		return bytes.IndexByte(b, terminatorByteInverse) + 1
+		return bytes.IndexByte(b, terminatorByteInverse) + 1, nil
 	default:
-		panic(fmt.Sprintf("Unknown type: %x", b[0]))
+		return 0, ErrInvalidTime
 	}
 }

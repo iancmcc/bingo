@@ -14,9 +14,9 @@ const (
 	sizeInt16                 = int(unsafe.Sizeof(int16(0))) + 1
 )
 
-func EncodeInt16(b []byte, v int16, inverse bool) int {
+func EncodeInt16(b []byte, v int16, inverse bool) (int, error) {
 	if cap(b) < sizeInt16 {
-		panic("slice is too small to hold an int16")
+		return 0, ErrByteArraySize
 	}
 	b = b[:sizeInt16]
 	b[0] = typeByteInt16
@@ -24,7 +24,7 @@ func EncodeInt16(b []byte, v int16, inverse bool) int {
 	if inverse {
 		bytes.InvertArraySmall(b)
 	}
-	return sizeInt16
+	return sizeInt16, nil
 }
 
 func DecodeInt16(b []byte, v reflect.Value) (int, error) {

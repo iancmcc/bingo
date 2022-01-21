@@ -10,12 +10,12 @@ import (
 const defaultSchema Schema = 0
 
 // Pack returns a byte slice containing the key composed of the values provided.
-func Pack(vals ...interface{}) []byte {
+func Pack(vals ...interface{}) ([]byte, error) {
 	return defaultSchema.Pack(vals...)
 }
 
 // PackInto packs vals into b.
-func PackInto(b []byte, vals ...interface{}) (n int) {
+func PackInto(b []byte, vals ...interface{}) (n int, err error) {
 	return defaultSchema.PackSlice(b, vals)
 }
 
@@ -31,12 +31,12 @@ func Unpack(b []byte, dests ...interface{}) error {
 		)
 		if dest == nil {
 			// Skip this one
-			n = codecs.SizeNext(b)
+			n, err = codecs.SizeNext(b)
 		} else {
 			n, err = codecs.DecodeValue(b, dest)
-			if err != nil {
-				return err
-			}
+		}
+		if err != nil {
+			return err
 		}
 		b = b[n:]
 	}
@@ -49,7 +49,11 @@ func UnpackIndex(b []byte, idx int, dest interface{}) error {
 		if n >= len(b) {
 			return errors.New(fmt.Sprintf("No data at index %d", idx))
 		}
-		n += codecs.SizeNext(b[n:])
+		nn, err := codecs.SizeNext(b[n:])
+		if err != nil {
+			return err
+		}
+		n += nn
 	}
 	return Unpack(b[n:], dest)
 }

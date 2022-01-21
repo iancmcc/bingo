@@ -12,8 +12,10 @@ import (
 var _ = Describe("Packing", func() {
 
 	It("should pack values while preserving order", func() {
-		a := Pack(1, "hi", int64(67))
-		b := Pack(1, "hi 1", int64(67))
+		a, err := Pack(1, "hi", int64(67))
+		Ω(err).ShouldNot(HaveOccurred())
+		b, err := Pack(1, "hi 1", int64(67))
+		Ω(err).ShouldNot(HaveOccurred())
 		Ω(bytes.Compare(a, b)).Should(Equal(-1))
 	})
 
@@ -35,8 +37,10 @@ var _ = Describe("Packing", func() {
 
 	It("should pack mixed-order values while preserving order", func() {
 		s := WithDesc(false, true, false)
-		a := s.Pack(1, "hi", int64(67))
-		b := s.Pack(1, "hi 1", int64(67))
+		a, err := s.Pack(1, "hi", int64(67))
+		Ω(err).ShouldNot(HaveOccurred())
+		b, err := s.Pack(1, "hi 1", int64(67))
+		Ω(err).ShouldNot(HaveOccurred())
 		Ω(bytes.Compare(a, b)).Should(Equal(1))
 	})
 
@@ -55,7 +59,8 @@ var _ = Describe("Unpacking", func() {
 		a := "this is a test"
 		b := int8(69)
 		c := float32(1.61803398875)
-		packed := Pack(a, b, c)
+		packed, err := Pack(a, b, c)
+		Ω(err).ShouldNot(HaveOccurred())
 
 		var (
 			adest string
@@ -72,7 +77,8 @@ var _ = Describe("Unpacking", func() {
 		a := "this is a test"
 		b := int8(69)
 		c := float32(1.61803398875)
-		packed := Pack(a, b, c)
+		packed, err := Pack(a, b, c)
+		Ω(err).ShouldNot(HaveOccurred())
 
 		var (
 			adest string
@@ -87,7 +93,8 @@ var _ = Describe("Unpacking", func() {
 		a := "this is a test"
 		b := int8(69)
 		c := float32(1.61803398875)
-		packed := Pack(a, b, c)
+		packed, err := Pack(a, b, c)
+		Ω(err).ShouldNot(HaveOccurred())
 
 		var (
 			adest string
@@ -105,7 +112,8 @@ var _ = Describe("Unpacking", func() {
 		a := "this is a test"
 		b := int8(69)
 		c := float32(1.61803398875)
-		packed := Pack(a, b, c)
+		packed, err := Pack(a, b, c)
+		Ω(err).ShouldNot(HaveOccurred())
 
 		var cdest float32
 		Ω(UnpackIndex(packed, 7, &cdest)).Should(HaveOccurred())

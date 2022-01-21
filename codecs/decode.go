@@ -15,7 +15,6 @@ func DecodeValue(b []byte, v interface{}) (int, error) {
 	}
 	switch b[0] {
 	case typeByteNil, typeByteNilInverse:
-		rv.Set(reflect.ValueNoEscapeOf(nil))
 		return 1, nil
 	case typeByteInt8, typeByteInt8Inverse:
 		return DecodeInt8(b, rv)

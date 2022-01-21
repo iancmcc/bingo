@@ -15,9 +15,9 @@ const (
 	sizeFloat32                 = int(unsafe.Sizeof(float32(0))) + 1
 )
 
-func EncodeFloat32(b []byte, v float32, inverse bool) int {
+func EncodeFloat32(b []byte, v float32, inverse bool) (int, error) {
 	if cap(b) < sizeFloat32 {
-		panic("slice is too small to hold a float32")
+		return 0, ErrByteArraySize
 	}
 	b = b[:sizeFloat32]
 	b[0] = typeByteFloat32
@@ -27,7 +27,7 @@ func EncodeFloat32(b []byte, v float32, inverse bool) int {
 	if inverse {
 		bytes.InvertArraySmall(b)
 	}
-	return sizeFloat32
+	return sizeFloat32, nil
 }
 
 func DecodeFloat32(b []byte, v reflect.Value) (int, error) {

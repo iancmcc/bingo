@@ -22,28 +22,35 @@ func WithDesc(cols ...bool) Schema {
 	return s
 }
 
-func (s Schema) Pack(vals ...interface{}) []byte {
+func (s Schema) Pack(vals ...interface{}) ([]byte, error) {
 	var size int
 	for _, v := range vals {
-		size += codecs.EncodedSize(v)
+		n, err := codecs.EncodedSize(v)
+		if err != nil {
+			return nil, err
+		}
+		size += n
 	}
 	buf := make([]byte, size, size)
 	s.packSlice(buf, vals)
-	return buf
+	return buf, nil
 }
 
-func (s Schema) PackInto(b []byte, vals ...interface{}) (n int) {
+func (s Schema) PackInto(b []byte, vals ...interface{}) (n int, err error) {
 	return s.packSlice(b, vals)
 }
 
-func (s Schema) PackSlice(b []byte, vals []interface{}) (n int) {
+func (s Schema) PackSlice(b []byte, vals []interface{}) (n int, err error) {
 	return s.packSlice(b, vals)
 }
 
-func (s Schema) packSlice(b []byte, vals []interface{}) (n int) {
+func (s Schema) packSlice(b []byte, vals []interface{}) (n int, err error) {
 	for i, v := range vals {
 		desc := s&(1<<i) > 0
-		m, _ := codecs.EncodeValue(b[n:], v, desc)
+		m, err := codecs.EncodeValue(b[n:], v, desc)
+		if err != nil {
+			return n, err
+		}
 		n += m
 	}
 	return

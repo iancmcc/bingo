@@ -14,9 +14,9 @@ const (
 	sizeInt32                 = int(unsafe.Sizeof(int32(0))) + 1
 )
 
-func EncodeInt32(b []byte, v int32, inverse bool) int {
+func EncodeInt32(b []byte, v int32, inverse bool) (int, error) {
 	if cap(b) < sizeInt32 {
-		panic("slice is too small to hold an int32")
+		return 0, ErrByteArraySize
 	}
 	b = b[:sizeInt32]
 	b[0] = typeByteInt32
@@ -24,7 +24,7 @@ func EncodeInt32(b []byte, v int32, inverse bool) int {
 	if inverse {
 		bytes.InvertArraySmall(b)
 	}
-	return sizeInt32
+	return sizeInt32, nil
 }
 
 func DecodeInt32(b []byte, v reflect.Value) (int, error) {
@@ -38,11 +38,7 @@ func DecodeInt32(b []byte, v reflect.Value) (int, error) {
 	for i := 1; i < 4; i++ {
 		val = (val << 8) + int32(encoded[i]&0xff)
 	}
-	typ, ptr := reflect.TypeAndPtrOf(v)
-	if typ.Kind() == reflect.Int {
-		**(**int)(unsafe.Pointer(&ptr)) = *(*int)(unsafe.Pointer(&val))
-	} else {
-		**(**int32)(unsafe.Pointer(&ptr)) = *(*int32)(unsafe.Pointer(&val))
-	}
+	uptr := v.Pointer()
+	**(**int32)(unsafe.Pointer(&uptr)) = *(*int32)(unsafe.Pointer(&val))
 	return sizeInt32, nil
 }

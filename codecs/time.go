@@ -15,19 +15,19 @@ const (
 	sizeTime                 = 16
 )
 
-func EncodeTime(b []byte, v time.Time, inverse bool) int {
+func EncodeTime(b []byte, v time.Time, inverse bool) (int, error) {
 	if cap(b) < sizeTime {
-		panic("insufficient slice to encode *time.Time")
+		return 0, ErrByteArraySize
 	}
 	b = b[:sizeTime]
 	b[0] = typeByteTime
 	if err := timeMarshalBinary(b[1:], v); err != nil {
-		panic(err)
+		return 0, ErrInvalidTime
 	}
 	if inverse {
 		bytes.InvertArraySmall(b)
 	}
-	return sizeFloat64
+	return sizeTime, nil
 }
 
 func DecodeTime(b []byte, v reflect.Value) (int, error) {
@@ -44,7 +44,6 @@ func DecodeTime(b []byte, v reflect.Value) (int, error) {
 	}
 	ptr := v.Pointer()
 	**(**time.Time)(unsafe.Pointer(&ptr)) = *(*time.Time)(unsafe.Pointer(&t))
-	//v.Elem().Set(reflect.ValueNoEscapeOf(t))
 	return sizeTime, nil
 }
 

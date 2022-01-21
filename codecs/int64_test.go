@@ -11,16 +11,16 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-func TestInt8(t *testing.T) {
+func TestInt64(t *testing.T) {
 
 	for _, negative := range []bool{false, true} {
 		negdesc := "positive"
 		if negative {
 			negdesc = "negative"
 		}
-		Convey(fmt.Sprintf("a %s int8", negdesc), t, func() {
+		Convey(fmt.Sprintf("a %s int64", negdesc), t, func() {
 
-			var a int8 = int8(rand.Int63n(math.MaxInt8 - 1))
+			var a int64 = int64(rand.Int63n(math.MaxInt64 - 1))
 			if negative {
 				a = -a
 			}
@@ -41,28 +41,29 @@ func TestInt8(t *testing.T) {
 					So(nn, ShouldEqual, expectedSize)
 					So(err, ShouldBeNil)
 
-					Convey("and decoded into an int8 pointer", func() {
-						var v int8
+					Convey("and decoded into an int64 pointer", func() {
+						var v int64
 						n, err := DecodeValue(b, &v)
 
 						So(n, ShouldEqual, expectedSize)
 						So(err, ShouldBeNil)
 						So(v, ShouldEqual, a)
 					})
+
 					Convey("and maintain lexicographical order", func() {
 						c := make([]byte, expectedSize, expectedSize)
-						var addend int8 = 1
+						var addend int64 = 1
 						if inverse {
 							addend *= -1
 						}
-						EncodeInt8(c, a+addend, inverse)
+						EncodeInt64(c, a+addend, inverse)
 						So(bytes.Compare(b, c), ShouldBeLessThan, 0)
 					})
 				})
 			}
 			Convey("throws an error when encoded into an insufficient array", func() {
 				b := make([]byte, expectedSize-1)
-				_, err := EncodeInt8(b, a, false)
+				_, err := EncodeInt64(b, a, false)
 				So(err, ShouldEqual, ErrByteArraySize)
 			})
 		})
