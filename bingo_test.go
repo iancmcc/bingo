@@ -30,8 +30,8 @@ var _ = Describe("Packing", func() {
 	It("should pack values with a packer while preserving order", func() {
 		buf := make([]byte, 32)
 		bufd := make([]byte, 32)
-		Packer(buf).Pack(1).Pack("hi").Pack(int64(67)).Done()
-		Packer(bufd).Pack(1).Pack("hi 1").Pack(int64(67)).Done()
+		NewPacker(buf).Pack(1).Pack("hi").Pack(int64(67))
+		NewPacker(bufd).Pack(1).Pack("hi 1").Pack(int64(67))
 		Ω(bytes.Compare(buf, bufd)).Should(Equal(-1))
 	})
 

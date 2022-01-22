@@ -20,8 +20,8 @@ func PackInto(b []byte, vals ...interface{}) (n int, err error) {
 }
 
 // Packer returns an object that can be used to pack values into b.
-func Packer(b []byte) schemaPacker {
-	return defaultSchema.Packer(b)
+func NewPacker(b []byte) Packer {
+	return defaultSchema.NewPacker(b)
 }
 
 // Unpack unpacks b into the targets provided.

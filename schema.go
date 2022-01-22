@@ -4,6 +4,10 @@ import "github.com/iancmcc/bingo/codecs"
 
 type Schema uint64
 
+type Packer interface {
+	Pack(v interface{}) Packer
+}
+
 type schemaPacker struct {
 	s Schema
 	b []byte
@@ -56,11 +60,11 @@ func (s Schema) packSlice(b []byte, vals []interface{}) (n int, err error) {
 	return
 }
 
-func (s Schema) Packer(b []byte) schemaPacker {
+func (s Schema) NewPacker(b []byte) Packer {
 	return schemaPacker{s, b, 0}
 }
 
-func (s schemaPacker) Pack(v interface{}) schemaPacker {
+func (s schemaPacker) Pack(v interface{}) Packer {
 	desc := s.s&(1<<s.i) > 0
 	n, _ := codecs.EncodeValue(s.b, v, desc)
 	s.b = s.b[n:]
