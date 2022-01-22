@@ -9,13 +9,21 @@ import (
 
 const defaultSchema Schema = 0
 
-// Pack returns a byte slice containing the key composed of the values provided.
+// Pack encodes the values passed, returning the resulting byte slice.
 func Pack(vals ...interface{}) ([]byte, error) {
 	return defaultSchema.Pack(vals...)
 }
 
-// PackInto packs vals into b.
+// PackInto encodes the values passed into the provided byte slice, returning
+// the number of bytes written.
 func PackInto(b []byte, vals ...interface{}) (n int, err error) {
+	return defaultSchema.PackSlice(b, vals)
+}
+
+// PackSlice encodes the values passed into the provided byte slice, returning
+// the number of bytes written, for cases where use of the unpack operator would
+// result in an extra allocation.
+func PackSlice(b []byte, vals []interface{}) (n int, err error) {
 	return defaultSchema.PackSlice(b, vals)
 }
 
