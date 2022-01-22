@@ -1,9 +1,12 @@
 package bytes
 
 import (
-	_ "crypto/cipher"
 	"encoding/binary"
+
+	// import for linking
 	_ "unsafe"
+	// import for linking
+	_ "crypto/cipher"
 )
 
 var word uint64 = 0xffffffffffffffff

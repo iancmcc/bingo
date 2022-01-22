@@ -3,6 +3,8 @@ package bingo
 import "github.com/iancmcc/bingo/codecs"
 
 type (
+	// Schema captures whether fields of a key should be encoded in inverse or
+	// natural order.
 	Schema uint64
 
 	schemaPacker struct {

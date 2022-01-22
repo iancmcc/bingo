@@ -1,7 +1,6 @@
 package bingo
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/iancmcc/bingo/codecs"
@@ -27,7 +26,7 @@ func PackSlice(b []byte, vals []interface{}) (n int, err error) {
 	return defaultSchema.PackSlice(b, vals)
 }
 
-// Packer returns an object that can be used to pack values into b.
+// NewPacker returns an object that can be used to pack values into b.
 func NewPacker(b []byte) Packer {
 	return defaultSchema.NewPacker(b)
 }
@@ -58,7 +57,7 @@ func UnpackIndex(b []byte, idx int, dest interface{}) error {
 	var n int
 	for i := 0; i < idx; i++ {
 		if n >= len(b) {
-			return errors.New(fmt.Sprintf("No data at index %d", idx))
+			return fmt.Errorf("No data at index %d", idx)
 		}
 		nn, err := codecs.SizeNext(b[n:])
 		if err != nil {
