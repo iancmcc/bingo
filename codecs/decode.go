@@ -11,7 +11,7 @@ var ()
 func DecodeValue(b []byte, v interface{}) (int, error) {
 	rv := reflect.ValueNoEscapeOf(v)
 	if rv.Kind() != reflect.Ptr || rv.IsNil() {
-		return 0, ErrNotAPointer
+		return 0, ErrInvalidTarget
 	}
 	switch b[0] {
 	case typeByteNil, typeByteNilInverse:

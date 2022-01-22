@@ -19,10 +19,12 @@ func PackInto(b []byte, vals ...interface{}) (n int, err error) {
 	return defaultSchema.PackSlice(b, vals)
 }
 
+// Packer returns an object that can be used to pack values into b.
 func Packer(b []byte) schemaPacker {
 	return defaultSchema.Packer(b)
 }
 
+// Unpack unpacks b into the targets provided.
 func Unpack(b []byte, dests ...interface{}) error {
 	for _, dest := range dests {
 		var (
@@ -43,6 +45,7 @@ func Unpack(b []byte, dests ...interface{}) error {
 	return nil
 }
 
+// UnpackIndex unpacks the idx'th value from b into the target provided.
 func UnpackIndex(b []byte, idx int, dest interface{}) error {
 	var n int
 	for i := 0; i < idx; i++ {

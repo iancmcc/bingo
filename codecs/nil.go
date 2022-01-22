@@ -18,7 +18,3 @@ func EncodeNil(b []byte, inverse bool) (int, error) {
 	}
 	return sizeNil, nil
 }
-
-func DecodeNil(b []byte) (int, error) {
-	return sizeNil, nil
-}

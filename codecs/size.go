@@ -54,6 +54,6 @@ func SizeNext(b []byte) (int, error) {
 	case typeByteStringInverse:
 		return bytes.IndexByte(b, terminatorByteInverse) + 1, nil
 	default:
-		return 0, ErrInvalidTime
+		return 0, ErrUnknownType
 	}
 }

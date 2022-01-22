@@ -2,7 +2,10 @@ package codecs
 
 import (
 	"time"
+	"unsafe"
 )
+
+const intsize = unsafe.Sizeof(int(0))
 
 func EncodeValue(b []byte, v interface{}, inverse bool) (int, error) {
 	if v == nil {
@@ -14,7 +17,10 @@ func EncodeValue(b []byte, v interface{}, inverse bool) (int, error) {
 	case int16:
 		return EncodeInt16(b, c, inverse)
 	case int:
-		return EncodeInt32(b, int32(c), inverse)
+		if intsize == 4 {
+			return EncodeInt32(b, int32(c), inverse)
+		}
+		return EncodeInt64(b, int64(c), inverse)
 	case int32:
 		return EncodeInt32(b, c, inverse)
 	case int64:
