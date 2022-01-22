@@ -15,9 +15,9 @@ const (
 	sizeTime                 = 16
 )
 
-func EncodeTime(b []byte, v time.Time, inverse bool) (int, error) {
+func encodeTime(b []byte, v time.Time, inverse bool) (int, error) {
 	if cap(b) < sizeTime {
-		return 0, ErrByteArraySize
+		return 0, ErrByteSliceSize
 	}
 	b = b[:sizeTime]
 	b[0] = typeByteTime
@@ -30,7 +30,7 @@ func EncodeTime(b []byte, v time.Time, inverse bool) (int, error) {
 	return sizeTime, nil
 }
 
-func DecodeTime(b []byte, v reflect.Value) (int, error) {
+func decodeTime(b []byte, v reflect.Value) (int, error) {
 	encoded := b[1:sizeTime]
 	if b[0] == typeByteTimeInverse {
 		encoded = make([]byte, 15)

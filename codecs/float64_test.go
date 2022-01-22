@@ -63,7 +63,7 @@ func TestFloat64(t *testing.T) {
 			Convey("throws an error when encoded into an insufficient array", func() {
 				b := make([]byte, expectedSize-1)
 				_, err := EncodeValue(b, a, false)
-				So(err, ShouldEqual, ErrByteArraySize)
+				So(err, ShouldEqual, ErrByteSliceSize)
 			})
 		})
 	}

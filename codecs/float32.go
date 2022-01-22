@@ -15,9 +15,9 @@ const (
 	sizeFloat32                 = int(unsafe.Sizeof(float32(0))) + 1
 )
 
-func EncodeFloat32(b []byte, v float32, inverse bool) (int, error) {
+func encodeFloat32(b []byte, v float32, inverse bool) (int, error) {
 	if cap(b) < sizeFloat32 {
-		return 0, ErrByteArraySize
+		return 0, ErrByteSliceSize
 	}
 	b = b[:sizeFloat32]
 	b[0] = typeByteFloat32
@@ -30,7 +30,7 @@ func EncodeFloat32(b []byte, v float32, inverse bool) (int, error) {
 	return sizeFloat32, nil
 }
 
-func DecodeFloat32(b []byte, v reflect.Value) (int, error) {
+func decodeFloat32(b []byte, v reflect.Value) (int, error) {
 	encoded := b[1:5]
 	if b[0] == typeByteFloat32Inverse {
 		encoded = make([]byte, 4)

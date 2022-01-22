@@ -15,10 +15,10 @@ const (
 	terminatorByteInverse      = terminatorByte ^ 0xff
 )
 
-func EncodeString(b []byte, v string, inverse bool) (int, error) {
+func encodeString(b []byte, v string, inverse bool) (int, error) {
 	size := len(v) + 2
 	if cap(b) < size {
-		return 0, ErrByteArraySize
+		return 0, ErrByteSliceSize
 	}
 	// Apparently an upfront check + copy is faster than checking during range
 	if strings.IndexByte(v, terminatorByte) > -1 {
@@ -34,7 +34,7 @@ func EncodeString(b []byte, v string, inverse bool) (int, error) {
 	return size, nil
 }
 
-func DecodeString(b []byte, v reflect.Value) (int, error) {
+func decodeString(b []byte, v reflect.Value) (int, error) {
 	var (
 		encoded []byte
 	)

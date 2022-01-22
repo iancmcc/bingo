@@ -13,9 +13,9 @@ const (
 	sizeInt8                 = int(unsafe.Sizeof(int8(0))) + 1
 )
 
-func EncodeInt8(b []byte, v int8, inverse bool) (int, error) {
+func encodeInt8(b []byte, v int8, inverse bool) (int, error) {
 	if cap(b) < sizeInt8 {
-		return 0, ErrByteArraySize
+		return 0, ErrByteSliceSize
 	}
 	b = b[:sizeInt8]
 	b[0] = typeByteInt8
@@ -26,7 +26,7 @@ func EncodeInt8(b []byte, v int8, inverse bool) (int, error) {
 	return sizeInt8, nil
 }
 
-func DecodeInt8(b []byte, v reflect.Value) (int, error) {
+func decodeInt8(b []byte, v reflect.Value) (int, error) {
 	encoded := b[1]
 	if b[0] == typeByteInt8Inverse {
 		encoded = bytes.InvertByte(encoded)

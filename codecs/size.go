@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+// EncodedSize returns the number of bytes required to encode the value v.
 func EncodedSize(v interface{}) (int, error) {
 	if v == nil {
 		return 1, nil
@@ -31,6 +32,8 @@ func EncodedSize(v interface{}) (int, error) {
 	}
 }
 
+// SizeNext returns the number of bytes encompassing the next encoded value in
+// the byte slice.
 func SizeNext(b []byte) (int, error) {
 	switch b[0] {
 	case typeByteNil, typeByteNilInverse:

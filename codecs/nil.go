@@ -6,9 +6,9 @@ const (
 	sizeNil            = 1
 )
 
-func EncodeNil(b []byte, inverse bool) (int, error) {
+func encodeNil(b []byte, inverse bool) (int, error) {
 	if cap(b) < sizeNil {
-		return 0, ErrByteArraySize
+		return 0, ErrByteSliceSize
 	}
 	b = b[:1]
 	if inverse {

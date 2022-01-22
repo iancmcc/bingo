@@ -48,7 +48,7 @@ func TestTime(t *testing.T) {
 					if inverse {
 						addend = -addend
 					}
-					EncodeTime(c, a.Add(addend), inverse)
+					EncodeValue(c, a.Add(addend), inverse)
 					So(bytes.Compare(b, c), ShouldBeLessThan, 0)
 				})
 
@@ -57,8 +57,8 @@ func TestTime(t *testing.T) {
 
 		Convey("returns an error when byte array is insufficient", func() {
 			b := make([]byte, expectedSize-1)
-			_, err := EncodeTime(b, a, false)
-			So(err, ShouldEqual, ErrByteArraySize)
+			_, err := EncodeValue(b, a, false)
+			So(err, ShouldEqual, ErrByteSliceSize)
 		})
 
 	})

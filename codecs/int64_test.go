@@ -56,15 +56,15 @@ func TestInt64(t *testing.T) {
 						if inverse {
 							addend *= -1
 						}
-						EncodeInt64(c, a+addend, inverse)
+						EncodeValue(c, a+addend, inverse)
 						So(bytes.Compare(b, c), ShouldBeLessThan, 0)
 					})
 				})
 			}
 			Convey("throws an error when encoded into an insufficient array", func() {
 				b := make([]byte, expectedSize-1)
-				_, err := EncodeInt64(b, a, false)
-				So(err, ShouldEqual, ErrByteArraySize)
+				_, err := EncodeValue(b, a, false)
+				So(err, ShouldEqual, ErrByteSliceSize)
 			})
 		})
 	}

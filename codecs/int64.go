@@ -14,9 +14,9 @@ const (
 	sizeInt64                 = int(unsafe.Sizeof(int64(0))) + 1
 )
 
-func EncodeInt64(b []byte, v int64, inverse bool) (int, error) {
+func encodeInt64(b []byte, v int64, inverse bool) (int, error) {
 	if cap(b) < sizeInt64 {
-		return 0, ErrByteArraySize
+		return 0, ErrByteSliceSize
 	}
 	b = b[:sizeInt64]
 	b[0] = typeByteInt64
@@ -27,7 +27,7 @@ func EncodeInt64(b []byte, v int64, inverse bool) (int, error) {
 	return sizeInt64, nil
 }
 
-func DecodeInt64(b []byte, v reflect.Value) (int, error) {
+func decodeInt64(b []byte, v reflect.Value) (int, error) {
 	encoded := b[1:9]
 	if b[0] == typeByteInt64Inverse {
 		encoded = make([]byte, 8)

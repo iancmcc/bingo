@@ -45,9 +45,10 @@ func TestNil(t *testing.T) {
 		}
 
 		Convey("returns an error when byte array is insufficient", func() {
+			var v interface{}
 			b := make([]byte, expectedSize-1)
-			_, err := EncodeNil(b, false)
-			So(err, ShouldEqual, ErrByteArraySize)
+			_, err := EncodeValue(b, v, false)
+			So(err, ShouldEqual, ErrByteSliceSize)
 		})
 	})
 

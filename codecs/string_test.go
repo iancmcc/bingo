@@ -57,15 +57,15 @@ func TestString(t *testing.T) {
 				c := []byte(a)
 				c[rand.Intn(len(c))] = 0
 				d := string(c)
-				_, err := EncodeString(b, d, inverse)
+				_, err := EncodeValue(b, d, inverse)
 				So(err, ShouldEqual, ErrNullByte)
 			})
 		}
 
 		Convey("returns an error when byte array is insufficient", func() {
 			b := make([]byte, expectedSize-1)
-			_, err := EncodeString(b, a, false)
-			So(err, ShouldEqual, ErrByteArraySize)
+			_, err := EncodeValue(b, a, false)
+			So(err, ShouldEqual, ErrByteSliceSize)
 		})
 	})
 

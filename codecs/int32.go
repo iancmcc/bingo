@@ -14,9 +14,9 @@ const (
 	sizeInt32                 = int(unsafe.Sizeof(int32(0))) + 1
 )
 
-func EncodeInt32(b []byte, v int32, inverse bool) (int, error) {
+func encodeInt32(b []byte, v int32, inverse bool) (int, error) {
 	if cap(b) < sizeInt32 {
-		return 0, ErrByteArraySize
+		return 0, ErrByteSliceSize
 	}
 	b = b[:sizeInt32]
 	b[0] = typeByteInt32
@@ -27,7 +27,7 @@ func EncodeInt32(b []byte, v int32, inverse bool) (int, error) {
 	return sizeInt32, nil
 }
 
-func DecodeInt32(b []byte, v reflect.Value) (int, error) {
+func decodeInt32(b []byte, v reflect.Value) (int, error) {
 	encoded := b[1:5]
 	if b[0] == typeByteInt32Inverse {
 		encoded = make([]byte, 4)
