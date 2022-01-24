@@ -6,9 +6,29 @@
 
 Fast, zero-allocation, lexicographic-order-preserving packing/unpacking of native Go types to bytes.
 
+## Features
+
+* 
+
+## Usage
+
+Import `bingo`:
+
+```go
+import "github.com/iancmcc/bingo"
+```
+
+### Pack it!
+
+```go
+import "github.com/iancmcc/bingo"
+
+bingo.NewPacker()
+```
+
 ## Benchmarks
 
-```
+```sh
 $ go test -bench BenchmarkCodecs
 ```
 

@@ -15,7 +15,12 @@ func EncodedSize(v interface{}) (int, error) {
 		return sizeInt8, nil
 	case int16:
 		return sizeInt16, nil
-	case int, int32:
+	case int:
+		if intsize == 4 {
+			return sizeInt32, nil
+		}
+		return sizeInt64, nil
+	case int32:
 		return sizeInt32, nil
 	case int64:
 		return sizeInt64, nil

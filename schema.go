@@ -1,17 +1,15 @@
 package bingo
 
-import "github.com/iancmcc/bingo/codecs"
+import (
+	"io"
+
+	"github.com/iancmcc/bingo/codecs"
+)
 
 type (
 	// Schema captures whether fields of a key should be encoded in inverse or
 	// natural order.
 	Schema uint64
-
-	schemaPacker struct {
-		s Schema
-		b []byte
-		i int
-	}
 )
 
 // WithDesc returns a Schema that will produce packed keys with the indicated
@@ -28,33 +26,37 @@ func WithDesc(cols ...bool) Schema {
 
 // Pack encodes the values passed, returning the resulting byte slice.
 func (s Schema) Pack(vals ...interface{}) ([]byte, error) {
-	var size int
-	for _, v := range vals {
-		n, err := codecs.EncodedSize(v)
-		if err != nil {
-			return nil, err
-		}
-		size += n
-	}
-	buf := make([]byte, size, size)
-	s.packSlice(buf, vals)
-	return buf, nil
+	return s.pack(vals)
 }
 
 // PackInto encodes the values passed into the provided byte slice, returning
 // the number of bytes written.
-func (s Schema) PackInto(b []byte, vals ...interface{}) (n int, err error) {
-	return s.packSlice(b, vals)
+func (s Schema) PackTo(b []byte, vals ...interface{}) (n int, err error) {
+	return s.packTo(b, vals)
 }
 
-// PackSlice encodes the values passed into the provided byte slice, returning
-// the number of bytes written, for cases where use of the unpack operator would
-// result in an extra allocation.
-func (s Schema) PackSlice(b []byte, vals []interface{}) (n int, err error) {
-	return s.packSlice(b, vals)
+func (s Schema) PackAllTo(b []byte, vals []interface{}) (n int, err error) {
+	return s.packTo(b, vals)
 }
 
-func (s Schema) packSlice(b []byte, vals []interface{}) (n int, err error) {
+// WritePackedTo encodes the values passed and writes the result to the
+// io.Writer specified. Note: this requires 1 heap alloc for the intermediate
+// byte array.
+func (s Schema) WritePackedTo(w io.Writer, vals ...interface{}) (n int, err error) {
+	return s.writePackedTo(w, vals)
+}
+
+func (s Schema) pack(vals []interface{}) ([]byte, error) {
+	size, err := PackedSize(vals)
+	if err != nil {
+		return nil, err
+	}
+	buf := make([]byte, size, size)
+	s.packTo(buf, vals)
+	return buf, nil
+}
+
+func (s Schema) packTo(b []byte, vals []interface{}) (n int, err error) {
 	for i, v := range vals {
 		desc := s&(1<<i) > 0
 		m, err := codecs.EncodeValue(b[n:], v, desc)
@@ -66,21 +68,10 @@ func (s Schema) packSlice(b []byte, vals []interface{}) (n int, err error) {
 	return
 }
 
-// NewPacker returns a Packer for the byte slice provided that uses this schema.
-func (s Schema) NewPacker(b []byte) Packer {
-	return schemaPacker{s, b, 0}
-}
-
-// Pack encodes the value provided into byte slice represented by the Packer.
-func (s schemaPacker) Pack(v interface{}) Packer {
-	desc := s.s&(1<<s.i) > 0
-	n, _ := codecs.EncodeValue(s.b, v, desc)
-	s.b = s.b[n:]
-	s.i += 1
-	return s
-}
-
-// Done releases the Packer's reference to the byte slice.
-func (s schemaPacker) Done() {
-	s.b = nil
+func (s Schema) writePackedTo(w io.Writer, vals []interface{}) (n int, err error) {
+	b, err := s.pack(vals)
+	if err != nil {
+		return 0, err
+	}
+	return w.Write(b)
 }

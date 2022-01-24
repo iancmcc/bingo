@@ -22,16 +22,8 @@ var _ = Describe("Packing", func() {
 	It("should pack values into a given array while preserving order", func() {
 		buf := make([]byte, 32)
 		bufd := make([]byte, 32)
-		PackInto(buf, 1, "hi", int64(67))
-		PackInto(bufd, 1, "hi 1", int64(67))
-		Ω(bytes.Compare(buf, bufd)).Should(Equal(-1))
-	})
-
-	It("should pack values with a packer while preserving order", func() {
-		buf := make([]byte, 32)
-		bufd := make([]byte, 32)
-		NewPacker(buf).Pack(1).Pack("hi").Pack(int64(67))
-		NewPacker(bufd).Pack(1).Pack("hi 1").Pack(int64(67))
+		PackTo(buf, 1, "hi", int64(67))
+		PackTo(bufd, 1, "hi 1", int64(67))
 		Ω(bytes.Compare(buf, bufd)).Should(Equal(-1))
 	})
 
@@ -48,8 +40,8 @@ var _ = Describe("Packing", func() {
 		buf := make([]byte, 32)
 		bufd := make([]byte, 32)
 		s := WithDesc(false, true, false)
-		s.PackInto(buf, 1, "hi", int64(67))
-		s.PackInto(bufd, 1, "hi 1", int64(67))
+		s.PackTo(buf, 1, "hi", int64(67))
+		s.PackTo(bufd, 1, "hi 1", int64(67))
 		Ω(bytes.Compare(buf, bufd)).Should(Equal(1))
 	})
 })

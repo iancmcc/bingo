@@ -2,6 +2,7 @@ package bingo
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/iancmcc/bingo/codecs"
 )
@@ -9,26 +10,28 @@ import (
 const defaultSchema Schema = 0
 
 // Pack encodes the values passed, returning the resulting byte slice.
+// This requires 1 heap alloc for the return value.
 func Pack(vals ...interface{}) ([]byte, error) {
-	return defaultSchema.Pack(vals...)
+	return defaultSchema.pack(vals)
 }
 
-// PackInto encodes the values passed into the provided byte slice, returning
-// the number of bytes written.
-func PackInto(b []byte, vals ...interface{}) (n int, err error) {
-	return defaultSchema.PackSlice(b, vals)
+// PackTo encodes the values passed into the provided byte slice, returning the
+// number of bytes written.
+func PackTo(b []byte, vals ...interface{}) (n int, err error) {
+	return defaultSchema.packTo(b, vals)
 }
 
-// PackSlice encodes the values passed into the provided byte slice, returning
-// the number of bytes written, for cases where use of the unpack operator would
-// result in an extra allocation.
-func PackSlice(b []byte, vals []interface{}) (n int, err error) {
-	return defaultSchema.PackSlice(b, vals)
+// PackAllTo encodes the values passed into the provided byte slice, returning the
+// number of bytes written.
+func PackAllTo(b []byte, vals []interface{}) (n int, err error) {
+	return defaultSchema.packTo(b, vals)
 }
 
-// NewPacker returns an object that can be used to pack values into b.
-func NewPacker(b []byte) Packer {
-	return defaultSchema.NewPacker(b)
+// WritePackedTo encodes the values passed and writes the result to the
+// io.Writer specified. Note: this requires 1 heap alloc for the intermediate
+// byte array.
+func WritePackedTo(w io.Writer, vals ...interface{}) (n int, err error) {
+	return defaultSchema.writePackedTo(w, vals)
 }
 
 // Unpack unpacks b into the targets provided.
@@ -66,4 +69,17 @@ func UnpackIndex(b []byte, idx int, dest interface{}) error {
 		n += nn
 	}
 	return Unpack(b[n:], dest)
+}
+
+// PackedSize returns the number of bytes required to pack the values passed
+func PackedSize(vals []interface{}) (int, error) {
+	var size int
+	for _, v := range vals {
+		n, err := codecs.EncodedSize(v)
+		if err != nil {
+			return 0, err
+		}
+		size += n
+	}
+	return size, nil
 }

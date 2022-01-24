@@ -40,6 +40,37 @@ func BenchmarkCodecs(b *testing.B) {
 			v:    time.Now(),
 		},
 	}
+	b.Run("packing", func(b *testing.B) {
+		now := time.Now()
+		s := "a, b, c"
+		vals := []interface{}{1, 2, 3, s, now, 3.141592653}
+		b.Run("Pack", func(b *testing.B) {
+			b.ReportAllocs()
+			b.ResetTimer()
+			for j := 0; j < b.N; j++ {
+				Pack(vals...)
+			}
+		})
+		b.Run("PackTo", func(b *testing.B) {
+			size, _ := PackedSize(vals)
+			buf := make([]byte, size, size)
+			b.ReportAllocs()
+			b.ResetTimer()
+			for j := 0; j < b.N; j++ {
+				PackTo(buf, vals...)
+				//PackTo(buf, 1, 2, 3, s, now, 3.141592653)
+			}
+		})
+		b.Run("PackAllTo", func(b *testing.B) {
+			size, _ := PackedSize(vals)
+			buf := make([]byte, size, size)
+			b.ReportAllocs()
+			b.ResetTimer()
+			for j := 0; j < b.N; j++ {
+				PackAllTo(buf, vals)
+			}
+		})
+	})
 	for _, fn := range fns {
 		b.Run(fn.name, func(b *testing.B) {
 			buf := make([]byte, 1024, 1024)
@@ -49,14 +80,14 @@ func BenchmarkCodecs(b *testing.B) {
 					b.ReportAllocs()
 					b.ResetTimer()
 					for j := 0; j < b.N; j++ {
-						PackInto(buf, fn.v)
+						PackTo(buf, fn.v)
 					}
 				})
 				b.Run("inverse", func(b *testing.B) {
 					b.ReportAllocs()
 					b.ResetTimer()
 					for j := 0; j < b.N; j++ {
-						WithDesc(true).PackInto(invbuf, fn.v)
+						WithDesc(true).PackTo(invbuf, fn.v)
 					}
 				})
 			})
