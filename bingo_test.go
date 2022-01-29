@@ -24,6 +24,9 @@ func TestBingo(t *testing.T) {
 		Convey("should pack values panicking on invalid type", func() {
 			So(func() { MustPack(1, "hi", int64(67)) }, ShouldNotPanic)
 			So(func() { MustPack(1, struct{}{}, int64(67)) }, ShouldPanic)
+
+			So(func() { WithDesc().MustPack(1, "hi", int64(67)) }, ShouldNotPanic)
+			So(func() { WithDesc().MustPack(1, struct{}{}, int64(67)) }, ShouldPanic)
 		})
 
 		Convey("should pack values into a given array while preserving order", func() {
@@ -32,6 +35,15 @@ func TestBingo(t *testing.T) {
 			PackTo(buf, 1, "hi", int64(67))
 			PackTo(bufd, 1, "hi 1", int64(67))
 			So(bytes.Compare(buf, bufd), ShouldEqual, -1)
+		})
+
+		Convey("should pack values to a given array panicking on invalid type", func() {
+			buf := make([]byte, 32)
+			So(func() { MustPackTo(buf, 1, "hi", int64(67)) }, ShouldNotPanic)
+			So(func() { MustPackTo(buf, 1, struct{}{}, int64(67)) }, ShouldPanic)
+
+			So(func() { WithDesc().MustPackTo(buf, 1, "hi", int64(67)) }, ShouldNotPanic)
+			So(func() { WithDesc().MustPackTo(buf, 1, struct{}{}, int64(67)) }, ShouldPanic)
 		})
 
 		Convey("should pack mixed-order values while preserving order", func() {

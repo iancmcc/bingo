@@ -68,8 +68,19 @@ func (s Schema) pack(vals []interface{}) ([]byte, error) {
 		return nil, err
 	}
 	buf := make([]byte, size, size)
-	s.packTo(buf, vals)
+	_, err = s.packTo(buf, vals)
+	if err != nil {
+		return nil, err
+	}
 	return buf, nil
+}
+
+func (s Schema) mustPack(vals []interface{}) []byte {
+	result, err := s.pack(vals)
+	if err != nil {
+		panic(err)
+	}
+	return result
 }
 
 func (s Schema) packTo(b []byte, vals []interface{}) (n int, err error) {
@@ -82,6 +93,14 @@ func (s Schema) packTo(b []byte, vals []interface{}) (n int, err error) {
 		n += m
 	}
 	return
+}
+
+func (s Schema) mustPackTo(b []byte, vals []interface{}) int {
+	result, err := s.packTo(b, vals)
+	if err != nil {
+		panic(err)
+	}
+	return result
 }
 
 func (s Schema) writePackedTo(w io.Writer, vals []interface{}) (n int, err error) {
