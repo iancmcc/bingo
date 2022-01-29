@@ -15,15 +15,19 @@ func Pack(vals ...interface{}) ([]byte, error) {
 	return defaultSchema.pack(vals)
 }
 
+// MustPack encodes the values passed, returning the resulting byte slice.
+// Panics on invalid type.
+func MustPack(vals ...interface{}) []byte {
+	result, err := defaultSchema.pack(vals)
+	if err != nil {
+		panic(err)
+	}
+	return result
+}
+
 // PackTo encodes the values passed into the provided byte slice, returning the
 // number of bytes written.
 func PackTo(b []byte, vals ...interface{}) (n int, err error) {
-	return defaultSchema.packTo(b, vals)
-}
-
-// PackAllTo encodes the values passed into the provided byte slice, returning the
-// number of bytes written.
-func PackAllTo(b []byte, vals []interface{}) (n int, err error) {
 	return defaultSchema.packTo(b, vals)
 }
 

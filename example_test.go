@@ -36,7 +36,7 @@ func ExamplePack() {
 	// 1 b 4.2
 }
 
-func ExamplePack_inverse() {
+func ExampleWithDesc() {
 	// Create a schema that packs the second value in descending order
 	schema := bingo.WithDesc(false, true, false)
 

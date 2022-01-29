@@ -11,6 +11,8 @@ func EncodedSize(v interface{}) (int, error) {
 		return 1, nil
 	}
 	switch t := v.(type) {
+	case bool:
+		return sizeBool, nil
 	case int8:
 		return sizeInt8, nil
 	case int16:
@@ -41,6 +43,8 @@ func EncodedSize(v interface{}) (int, error) {
 // the byte slice.
 func SizeNext(b []byte) (int, error) {
 	switch b[0] {
+	case typeByteBool, typeByteBoolInverse:
+		return sizeBool, nil
 	case typeByteNil, typeByteNilInverse:
 		return sizeNil, nil
 	case typeByteInt8, typeByteInt8Inverse:

@@ -61,15 +61,6 @@ func BenchmarkCodecs(b *testing.B) {
 				//PackTo(buf, 1, 2, 3, s, now, 3.141592653)
 			}
 		})
-		b.Run("PackAllTo", func(b *testing.B) {
-			size, _ := PackedSize(vals)
-			buf := make([]byte, size, size)
-			b.ReportAllocs()
-			b.ResetTimer()
-			for j := 0; j < b.N; j++ {
-				PackAllTo(buf, vals)
-			}
-		})
 	})
 	for _, fn := range fns {
 		b.Run(fn.name, func(b *testing.B) {

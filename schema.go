@@ -35,10 +35,6 @@ func (s Schema) PackTo(b []byte, vals ...interface{}) (n int, err error) {
 	return s.packTo(b, vals)
 }
 
-func (s Schema) PackAllTo(b []byte, vals []interface{}) (n int, err error) {
-	return s.packTo(b, vals)
-}
-
 // WritePackedTo encodes the values passed and writes the result to the
 // io.Writer specified. Note: this requires 1 heap alloc for the intermediate
 // byte array.

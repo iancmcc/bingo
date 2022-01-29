@@ -21,6 +21,11 @@ func TestBingo(t *testing.T) {
 			So(bytes.Compare(a, b), ShouldEqual, -1)
 		})
 
+		Convey("should pack values panicking on invalid type", func() {
+			So(func() { MustPack(1, "hi", int64(67)) }, ShouldNotPanic)
+			So(func() { MustPack(1, struct{}{}, int64(67)) }, ShouldPanic)
+		})
+
 		Convey("should pack values into a given array while preserving order", func() {
 			buf := make([]byte, 32)
 			bufd := make([]byte, 32)
