@@ -13,10 +13,6 @@ const (
 	typeByteFloat64        byte = 0x31
 	typeByteFloat64Inverse      = typeByteFloat64 ^ 0xff
 	sizeFloat64                 = int(unsafe.Sizeof(float64(0))) + 1
-	TypeByteUint8               = 0x19
-	TypeByteUint16              = 0x1a
-	TypeByteUint32              = 0x1b
-	TypeByteUint64              = 0x1c
 )
 
 func encodeFloat64(b []byte, v float64, inverse bool) (int, error) {
