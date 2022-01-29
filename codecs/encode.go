@@ -16,6 +16,19 @@ func EncodeValue(b []byte, v interface{}, inverse bool) (int, error) {
 	switch c := v.(type) {
 	case bool:
 		return encodeBool(b, c, inverse)
+	case uint8:
+		return encodeUint8(b, c, inverse)
+	case uint16:
+		return encodeUint16(b, c, inverse)
+	case uint:
+		if intsize == 4 {
+			return encodeUint32(b, uint32(c), inverse)
+		}
+		return encodeUint64(b, uint64(c), inverse)
+	case uint32:
+		return encodeUint32(b, c, inverse)
+	case uint64:
+		return encodeUint64(b, c, inverse)
 	case int8:
 		return encodeInt8(b, c, inverse)
 	case int16:

@@ -18,6 +18,14 @@ func DecodeValue(b []byte, v interface{}) (int, error) {
 		return 1, nil
 	case typeByteBool, typeByteBoolInverse:
 		return decodeBool(b, rv)
+	case typeByteUint8, typeByteUint8Inverse:
+		return decodeUint8(b, rv)
+	case typeByteUint16, typeByteUint16Inverse:
+		return decodeUint16(b, rv)
+	case typeByteUint32, typeByteUint32Inverse:
+		return decodeUint32(b, rv)
+	case typeByteUint64, typeByteUint64Inverse:
+		return decodeUint64(b, rv)
 	case typeByteInt8, typeByteInt8Inverse:
 		return decodeInt8(b, rv)
 	case typeByteInt16, typeByteInt16Inverse:

@@ -29,10 +29,30 @@ func (s Schema) Pack(vals ...interface{}) ([]byte, error) {
 	return s.pack(vals)
 }
 
-// PackInto encodes the values passed into the provided byte slice, returning
+// MustPack encodes the values passed, returning the resulting byte slice and
+// panicking on error.
+func (s Schema) MustPack(vals ...interface{}) []byte {
+	result, err := s.pack(vals)
+	if err != nil {
+		panic(err)
+	}
+	return result
+}
+
+// PackTo encodes the values passed into the provided byte slice, returning
 // the number of bytes written.
 func (s Schema) PackTo(b []byte, vals ...interface{}) (n int, err error) {
 	return s.packTo(b, vals)
+}
+
+// MustPackTo encodes the values passed into the provided byte slice, returning
+// the number of bytes written. Panics on error.
+func (s Schema) MustPackTo(b []byte, vals ...interface{}) int {
+	result, err := s.packTo(b, vals)
+	if err != nil {
+		panic(err)
+	}
+	return result
 }
 
 // WritePackedTo encodes the values passed and writes the result to the

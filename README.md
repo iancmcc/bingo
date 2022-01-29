@@ -8,7 +8,12 @@ Fast, zero-allocation, lexicographic-order-preserving packing/unpacking of nativ
 
 ## Features
 
-* 
+* Encode `bool`, `string`, `int8`, `int16`, `int32`, `int64`, `uint8`, `uint16`, `uint32`, `uint64`, `float32`, `float64`, and `time.Time`
+* Packed values maintain original sort order
+* Pack values in descending order
+* Pack to an existing byte slice with no additional allocations
+* Create and pack values to a new byte slice (one allocation)
+* Unpack all values or just specific indexes
 
 ## Usage
 
@@ -18,12 +23,18 @@ Import `bingo`:
 import "github.com/iancmcc/bingo"
 ```
 
-### Pack it!
+### Packing
 
 ```go
-import "github.com/iancmcc/bingo"
+// Create and return a byte slice with encoded values
+key := bingo.MustPack(vals...)
 
-bingo.NewPacker()
+// Pack so results will sort the third value descending
+bingo.WithDesc(false, false, true).MustPack(1, true, time.Now())
+
+// Pack to an existing byte slice
+existingSlice := make([]byte, 100)
+key := bingo.MustPackTo(existingSlice, uint16(7), "abc123")
 ```
 
 ## Benchmarks
