@@ -4,8 +4,6 @@ import (
 	"github.com/goccy/go-reflect"
 )
 
-var ()
-
 // DecodeValue decodes the first value in slice b into the location defined by
 // pointer v.
 func DecodeValue(b []byte, v interface{}) (int, error) {
