@@ -27,10 +27,23 @@ import "github.com/iancmcc/bingo"
 
 ```go
 // Create and return a byte slice with encoded values
-key := bingo.MustPack(vals...)
+key := bingo.MustPack(uint8(12), "cool string bro")
 
-// Pack so results will sort the third value descending
-bingo.WithDesc(false, false, true).MustPack(1, true, time.Now())
+// Now unpack
+var (
+    first uint8
+    second string
+)
+bingo.Unpack(key, &first, &second)
+
+
+// Pack so results will sort the second value descending
+key = bingo.WithDesc(false, true, false).MustPack(1, time.Now(), true)
+
+// Just unpack the middle value
+var t time.Time
+bingo.UnpackIndex(key, 1, &t)
+
 
 // Pack to an existing byte slice
 existingSlice := make([]byte, 100)
