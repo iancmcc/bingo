@@ -4,6 +4,7 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/iancmcc/bingo.svg)](https://pkg.go.dev/github.com/iancmcc/bingo)
 ![Tests](https://github.com/iancmcc/bingo/actions/workflows/tests.yml/badge.svg)
 [![Coverage](https://coveralls.io/repos/github/iancmcc/bingo/badge.svg?branch=main)](https://coveralls.io/github/iancmcc/bingo?branch=main)
+[![Mentioned in Awesome Go](https://awesome.re/mentioned-badge.svg)](https://github.com/avelino/awesome-go)
 
 Fast, zero-allocation, lexicographic-order-preserving packing/unpacking of native Go types to bytes.
 
