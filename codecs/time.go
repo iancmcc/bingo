@@ -55,7 +55,6 @@ func time_sec(*time.Time) int64
 //go:noescape
 func time_nsec(*time.Time) int32
 
-//go:linkname time_timeBinaryVersion time.timeBinaryVersion
 const timeBinaryVersion byte = 1
 
 func timeMarshalBinary(b []byte, t time.Time) error {
