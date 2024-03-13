@@ -3,10 +3,7 @@ package bytes
 import (
 	"encoding/binary"
 
-	// import for linking
-	_ "unsafe"
-	// import for linking
-	_ "crypto/cipher"
+	"crypto/subtle"
 )
 
 var word uint64 = 0xffffffffffffffff
@@ -18,23 +15,20 @@ func init() {
 	}
 }
 
-//go:linkname xorBytes crypto/cipher.xorBytes
-func xorBytes(dst, a, b []byte) int
-
 // InvertByte inverts a single byte.
 func InvertByte(b byte) byte {
 	return b ^ 0xff
 }
 
-// InvertArrayLarge inverts the byte array using the optimized xorBytes
-// function from the crypto/cipher package. This is fastest for byte arrays
+// InvertArrayLarge inverts the byte array using the optimized XORBytes
+// function from the crypto/subtle package. This is fastest for byte arrays
 // larger than 128 bytes.
 func InvertArrayLarge(a []byte) {
 	for len(a) >= 4096 {
-		xorBytes(a[:4096], a[:4096], maxarray)
+		subtle.XORBytes(a[:4096], a[:4096], maxarray)
 		a = a[4096:]
 	}
-	xorBytes(a, a, maxarray)
+	subtle.XORBytes(a, a, maxarray)
 }
 
 // InvertArray inverts the byte array, choosing the optimal inversion function.

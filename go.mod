@@ -1,9 +1,9 @@
 module github.com/iancmcc/bingo
 
-go 1.17
+go 1.20
 
 require (
-	github.com/goccy/go-reflect v1.1.0
+	github.com/goccy/go-reflect v1.2.0
 	github.com/smartystreets/goconvey v1.7.2
 )
 
