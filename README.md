@@ -49,7 +49,7 @@ bingo.UnpackIndex(key, 1, &t)
 
 // Pack to an existing byte slice
 existingSlice := make([]byte, 100)
-key := bingo.MustPackTo(existingSlice, uint16(7), "abc123")
+bingo.MustPackTo(existingSlice, uint16(7), "abc123")
 ```
 
 ## Benchmarks
